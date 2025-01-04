@@ -49,15 +49,6 @@ public class StudentServiceImpl implements StudentService {
         List<CourseSelection> courseList = studentMapper.getByStudentIdandSemester(studentId, course.getSemester());
 
         // 2、判断是否有已选课程或者时间重叠的课程
-        // 定义星期的映射关系
-        Map<String, Integer> weekMap = new HashMap<>();
-        weekMap.put("星期一", 1);
-        weekMap.put("星期二", 2);
-        weekMap.put("星期三", 3);
-        weekMap.put("星期四", 4);
-        weekMap.put("星期五", 5);
-        weekMap.put("星期六", 6);
-        weekMap.put("星期天", 7);
 
         // 解析新课程的上课时间
         String newClassTime = course.getClassTime();
