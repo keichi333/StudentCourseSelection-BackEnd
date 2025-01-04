@@ -3,6 +3,8 @@ package com.example.StudentCourse.intercepter;
 import com.alibaba.fastjson.JSONObject;
 import com.example.StudentCourse.pojo.Result;
 import com.example.StudentCourse.utils.JwtUtils;
+import com.example.StudentCourse.utils.UserContext;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -65,19 +67,13 @@ public class LoginCheckIntercepter implements HandlerInterceptor {
             resp.getWriter().write(notLogin);  // 写入未登录信息
             return false; // 拦截请求，未登录
         }
-
+        // 获取 token 中的用户信息，并设置到 UserContext 中
+        Claims claims = JwtUtils.parseJWT(jwt);  // 解析JWT
+        String Id = claims.get("Id", String.class);
+        System.out.println("Id: " + Id);
+        UserContext.setUser(Id);
         // 如果 token 合法，放行请求
         log.info("令牌合法，放行");
         return true;
-    }
-
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        System.out.println("postHandle...");
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        System.out.println("afterCompletion...");
     }
 }

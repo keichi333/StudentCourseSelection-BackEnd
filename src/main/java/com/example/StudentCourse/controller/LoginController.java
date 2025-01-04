@@ -30,7 +30,7 @@ public class LoginController {
         Student s = studentService.login(stu);
         if(s!=null){
             Map<String, Object> claims=new HashMap<>();
-            claims.put("student_id",s.getStudentId());
+            claims.put("Id",s.getStudentId());
             claims.put("name",s.getName());
 
             String jwt=JwtUtils.generateJwt(claims);   // Jwt中包含了当前登录的学生信息
@@ -45,7 +45,7 @@ public class LoginController {
         Teacher t = teacherService.login(teacher);
         if(t!=null){
             Map<String, Object> claims=new HashMap<>();
-            claims.put("staff_id",t.getStaffId());
+            claims.put("Id",t.getStaffId());
             claims.put("name",t.getName());
 
             String jwt=JwtUtils.generateJwt(claims);

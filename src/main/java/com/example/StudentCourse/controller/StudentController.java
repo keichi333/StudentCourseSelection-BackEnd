@@ -3,6 +3,7 @@ package com.example.StudentCourse.controller;
 import com.example.StudentCourse.pojo.*;
 import com.example.StudentCourse.service.StudentService;
 import com.example.StudentCourse.utils.JwtUtils;
+import com.example.StudentCourse.utils.UserContext;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +37,9 @@ public class StudentController {
 
     // 显示该学生选课情况
     @GetMapping("student/selection")
-    public Result showSelection(HttpServletRequest request,
-                                @RequestParam(required = false) String semester) {
-        // 从请求头中获取 Authorization 字段 并拿出其中的student_id
-        String authorizationHeader = request.getHeader("Authorization");
-        String jwtToken = authorizationHeader.substring(7);  // 去除 "Bearer " 前缀
-        Claims claims = JwtUtils.parseJWT(jwtToken);  // 解析JWT
-
-        String studentId = claims.get("student_id", String.class);  // 从 claims 中获取 student_id
+    public Result showSelection(@RequestParam(required = false) String semester) {
+        // 从线程变量UserContext中获取 student_id
+        String studentId = UserContext.getUser();
 
         // 调用服务层方法，传递学期参数（如果有）
         List<CourseSelection> selectionList = studentService.showSelection(studentId, semester);
@@ -53,13 +49,9 @@ public class StudentController {
 
     // 根据选课信息选课
     @PostMapping("student/choose")
-    public Result chooseClass(HttpServletRequest request,
-                              @RequestBody Classes course){
+    public Result chooseClass(@RequestBody Classes course){
         // 从请求头中获取 Authorization 字段 并拿出其中的student_id
-        String authorizationHeader = request.getHeader("Authorization");
-        String jwtToken = authorizationHeader.substring(7);  // 去除 "Bearer " 前缀
-        Claims claims = JwtUtils.parseJWT(jwtToken);  // 解析JWT
-        String studentId = claims.get("student_id", String.class);  // 从 claims 中获取 student_id
+        String studentId = UserContext.getUser();
 
         // 判断选择的课程是否有冲突
         Boolean choose = studentService.chooseClass(studentId, course);
@@ -72,28 +64,16 @@ public class StudentController {
     }
 
     @DeleteMapping("student/delete")
-    public Result deleteClass(HttpServletRequest request,
-                              @RequestBody CourseSelection course){
-        // 从请求头中获取 Authorization 字段 并拿出其中的student_id
-        String authorizationHeader = request.getHeader("Authorization");
-        String jwtToken = authorizationHeader.substring(7);  // 去除 "Bearer " 前缀
-        Claims claims = JwtUtils.parseJWT(jwtToken);  // 解析JWT
-        String studentId = claims.get("student_id", String.class);  // 从 claims 中获取 student_id
-
-
+    public Result deleteClass(@RequestBody CourseSelection course){
+        String studentId = UserContext.getUser();
         studentService.deleteClass(studentId, course);
         return Result.success();
     }
 
     @GetMapping("student/info")
     // 显示学生个人信息
-    public Result showInfo(HttpServletRequest request){
-        // 从请求头中获取 Authorization 字段 并拿出其中的student_id
-        String authorizationHeader = request.getHeader("Authorization");
-        String jwtToken = authorizationHeader.substring(7);  // 去除 "Bearer " 前缀
-        Claims claims = JwtUtils.parseJWT(jwtToken);  // 解析JWT
-        String studentId = claims.get("student_id", String.class);  // 从 claims 中获取 student_id
-
+    public Result showInfo(){
+        String studentId = UserContext.getUser();
         Student stu = studentService.showInfo(studentId);
         return Result.success(stu);
     }
@@ -106,13 +86,8 @@ public class StudentController {
     }
 
     @PutMapping("student/updatepassword")
-    public Result updatePassword(HttpServletRequest request,
-                                 @RequestBody Password password){
-        // 从请求头中获取 Authorization 字段 并拿出其中的student_id
-        String authorizationHeader = request.getHeader("Authorization");
-        String jwtToken = authorizationHeader.substring(7);  // 去除 "Bearer " 前缀
-        Claims claims = JwtUtils.parseJWT(jwtToken);  // 解析JWT
-        String studentId = claims.get("student_id", String.class);  // 从 claims 中获取 student_id
+    public Result updatePassword(@RequestBody Password password){
+        String studentId = UserContext.getUser();
 
         if(!password.getNewPassword().equals(password.getConfirmPassword())){
             return Result.error("新密码与确认密码不匹配！请重试");
