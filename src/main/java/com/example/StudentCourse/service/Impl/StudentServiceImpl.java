@@ -58,36 +58,46 @@ public class StudentServiceImpl implements StudentService {
         weekMap.put("星期五", 5);
         weekMap.put("星期六", 6);
         weekMap.put("星期天", 7);
-        // 获取新课程的 class_time
+
+        // 解析新课程的上课时间
         String newClassTime = course.getClassTime();
-        String[] newParts = newClassTime.split("\\d+[-]\\d+");  // 分割出星期几部分
-        String newDay = newParts[0];  // 例如 "星期三"
-        String newRange = newClassTime.split(newDay)[1];    // 按照newDay(星期三)对newClassTime(星期三1-4)进行分割，得到时间段(1-4)
-        // 获取时间范围
-        String[] newRangeParts = newRange.split("-"); // 按照“-”对时间(1-4)进行分割，得到[1,4]
-        int newStart = Integer.parseInt(newRangeParts[0]);
-        int newEnd = Integer.parseInt(newRangeParts[1]);
-        // 遍历已选课程列表
-        for (CourseSelection selectedCourse : courseList) {
-            // 获取已有课程的 class_time
-            String existingClassTime = selectedCourse.getClassTime();
-            String[] existingParts = existingClassTime.split("\\d+[-]\\d+");  // 分割出星期几部分
-            String existingDay = existingParts[0];  // 例如 "星期三"
-            String existingRange = existingClassTime.split(existingDay)[1];  // 获取时间范围部分 例如 "1-4"
-            // 获取已有课程的时间范围
-            String[] existingRangeParts = existingRange.split("-");
-            int existingStart = Integer.parseInt(existingRangeParts[0]);
-            int existingEnd = Integer.parseInt(existingRangeParts[1]);
-            // 检查是否有相同的 course_id
-            if (selectedCourse.getCourseId().equals(course.getCourseId())) {
-                // 如果已选课程的 course_id 与传入的 course_id 相同，返回 false
-                return false;
-            }
-            // 检查是否在同一天
-            if (existingDay.equals(newDay)) {
-                // 如果时间段有重叠，返回 false
-                if (newStart <= existingEnd && newEnd >= existingStart) {
-                    return false;
+        String[] newClassTimeParts = newClassTime.split("，");  // 分割出每一天的时间部分
+        for (String newClassTimePart : newClassTimeParts) {
+            String[] newParts = newClassTimePart.split("\\d+[-]\\d+");  // 分割出星期几部分
+            String newDay = newParts[0].trim();  // 例如 "星期三"
+            String newRange = newClassTimePart.split(newDay)[1].trim();  // 获取时间范围部分 例如 "1-4"
+            // 获取时间范围
+            String[] newRangeParts = newRange.split("-");
+            int newStart = Integer.parseInt(newRangeParts[0]);
+            int newEnd = Integer.parseInt(newRangeParts[1]);
+
+            // 遍历已选课程列表
+            for (CourseSelection selectedCourse : courseList) {
+                // 解析已有课程的上课时间
+                String existingClassTime = selectedCourse.getClassTime();
+                String[] existingClassTimeParts = existingClassTime.split("，");  // 分割出每一天的时间部分
+                for (String existingClassTimePart : existingClassTimeParts) {
+                    String[] existingParts = existingClassTimePart.split("\\d+[-]\\d+");  // 分割出星期几部分
+                    String existingDay = existingParts[0].trim();  // 例如 "星期三"
+                    String existingRange = existingClassTimePart.split(existingDay)[1].trim();  // 获取时间范围部分 例如 "1-4"
+                    // 获取已有课程的时间范围
+                    String[] existingRangeParts = existingRange.split("-");
+                    int existingStart = Integer.parseInt(existingRangeParts[0]);
+                    int existingEnd = Integer.parseInt(existingRangeParts[1]);
+
+                    // 检查是否有相同的 course_id
+                    if (selectedCourse.getCourseId().equals(course.getCourseId())) {
+                        // 如果已选课程的 course_id 与传入的 course_id 相同，返回 false
+                        return false;
+                    }
+
+                    // 检查是否在同一天
+                    if (existingDay.equals(newDay)) {
+                        // 如果时间段有重叠，返回 false
+                        if (newStart <= existingEnd && newEnd >= existingStart) {
+                            return false;
+                        }
+                    }
                 }
             }
         }
@@ -100,6 +110,7 @@ public class StudentServiceImpl implements StudentService {
         return true;
     }
 
+    // 删除已选课程
     @Override
     public void deleteClass(String studentId, CourseSelection course) {
         String courseId = course.getCourseId();
