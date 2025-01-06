@@ -6,10 +6,7 @@ import com.example.StudentCourse.pojo.Result;
 import com.example.StudentCourse.service.TeacherService;
 import com.example.StudentCourse.utils.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,6 +33,13 @@ public class TeacherController {
         String teacherId = UserContext.getUser();
         List<CourseSelection> studentScoreList = teacherService.showStuentScore(teacherId, semester, courseId, classId);
         return Result.success(studentScoreList);
+    }
+
+    @PutMapping("/teacher/updateScores")
+    public Result updateScores(@RequestBody List<CourseSelection> studentScoreList){
+        String teacherId = UserContext.getUser();
+        teacherService.updateScores(studentScoreList, teacherId);
+        return Result.success();
     }
 
 

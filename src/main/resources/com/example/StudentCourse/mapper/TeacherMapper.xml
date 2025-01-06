@@ -4,8 +4,18 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.StudentCourse.mapper.TeacherMapper">
 
+
+    <update id="updateScore">
+        update course_selection
+        set normal_score = #{normalScore}, test_score = #{testScore}, total_score = #{totalScore}
+        where student_id = #{studentId}
+        and course_id = #{courseId}
+        and staff_id = #{teacherId}
+        and semester = #{semester}
+    </update>
+
     <select id="showTeachClass" resultType="com.example.StudentCourse.pojo.Classes">
-        SELECT cl.course_id, c.course_name, cl.class_time, cl.class_id
+        SELECT cl.course_id, c.course_name, cl.class_time, cl.class_id, cl.semester
         FROM class cl
         JOIN course c ON cl.course_id = c.course_id
         WHERE cl.staff_id = #{teacherId}

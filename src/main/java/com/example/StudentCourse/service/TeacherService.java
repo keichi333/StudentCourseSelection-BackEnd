@@ -13,4 +13,6 @@ public interface TeacherService {
     List<Classes> showTeachClass(String teacherId, String semester, String courseId);
 
     List<CourseSelection> showStuentScore(String teacherId, String semester, String courseId, String classId);
+
+    void updateScores(List<CourseSelection> studentScoreList, String teacherId);
 }

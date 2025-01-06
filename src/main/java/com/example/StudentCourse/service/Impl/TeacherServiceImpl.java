@@ -30,4 +30,24 @@ public class TeacherServiceImpl implements TeacherService {
     public List<CourseSelection> showStuentScore(String teacherId, String semester, String courseId, String classId) {
         return teacherMapper.showStuentScoreList(teacherId, semester, courseId, classId);
     }
+
+    @Override
+    public void updateScores(List<CourseSelection> studentScoreList, String teacherId) {
+        String courseId;
+        String semester;
+        Integer normalScore;
+        Integer testScore;
+        Integer totalScore;
+        String studentId;
+        // 对studentScoreList中的每一行，进行更新
+        for (CourseSelection courseSelection : studentScoreList) {
+            courseId = courseSelection.getCourseId();
+            semester = courseSelection.getSemester();
+            normalScore = courseSelection.getNormalScore();
+            testScore = courseSelection.getTestScore();
+            totalScore = courseSelection.getTotalScore();
+            studentId = courseSelection.getStudentId();
+            teacherMapper.updateScore(courseId, semester, teacherId, studentId, normalScore, testScore, totalScore);
+        }
+    }
 }

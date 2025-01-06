@@ -47,9 +47,9 @@ public class StudentServiceImpl implements StudentService {
     // 选课
     @Transactional
     @Override
-    public Boolean chooseClass(String studentId, Classes course) {
+    public Integer chooseClass(String studentId, Classes course) {
         // 1、获取该学生在指定学期已选的课程列表
-        List<CourseSelection> courseList = studentMapper.getByStudentIdandSemester(studentId, course.getSemester());
+        List<CourseSelection> courseList = studentMapper.getByStudentIdandSemester(studentId, course.getSemester(), course.getClassId());
 
         // 2、判断是否有已选课程或者时间重叠的课程
 
@@ -82,14 +82,14 @@ public class StudentServiceImpl implements StudentService {
                     // 检查是否有相同的 course_id
                     if (selectedCourse.getCourseId().equals(course.getCourseId())) {
                         // 如果已选课程的 course_id 与传入的 course_id 相同，返回 false
-                        return false;
+                        return 1;
                     }
 
                     // 检查是否在同一天
                     if (existingDay.equals(newDay)) {
                         // 如果时间段有重叠，返回 false
                         if (newStart <= existingEnd && newEnd >= existingStart) {
-                            return false;
+                            return 2;
                         }
                     }
                 }
@@ -102,7 +102,7 @@ public class StudentServiceImpl implements StudentService {
         String staffId = course.getStaffId();
         String classTime = course.getClassTime();
         studentMapper.choose(studentId, semester, courseId, staffId, classTime);
-        return true;
+        return 3;
     }
 
     // 删除已选课程

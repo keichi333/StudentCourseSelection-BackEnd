@@ -26,7 +26,7 @@ public interface StudentMapper {
     List<CourseSelection> showSelection(String studentId, String semester);
 
     // 根据学生id和学期查看对应选课表中的数据
-    List<CourseSelection> getByStudentIdandSemester(String studentId, String semester);
+    List<CourseSelection> getByStudentIdandSemester(String studentId, String semester, String classId);
 
     // 选课(向选课表中添加数据)
     void choose(String studentId, String semester, String courseId, String staffId, String classTime);

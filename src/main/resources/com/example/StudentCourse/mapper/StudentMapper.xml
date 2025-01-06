@@ -93,6 +93,7 @@
         WHERE
           cs.student_id = #{studentId}
           AND cs.semester = #{semester}
+          AND c.class_id = #{classId}
     </select>
 
     <select id="selectInfo" resultType="com.example.StudentCourse.pojo.Student">
