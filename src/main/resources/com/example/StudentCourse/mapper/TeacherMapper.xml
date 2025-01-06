@@ -5,12 +5,34 @@
 <mapper namespace="com.example.StudentCourse.mapper.TeacherMapper">
 
     <select id="showTeachClass" resultType="com.example.StudentCourse.pojo.Classes">
-        SELECT cl.course_id, c.course_name, cl.class_time
+        SELECT cl.course_id, c.course_name, cl.class_time, cl.class_id
         FROM class cl
         JOIN course c ON cl.course_id = c.course_id
         WHERE cl.staff_id = #{teacherId}
         <if test="semester != null and semester != ''">
             AND cl.semester = #{semester}  <!-- 根据传入的学期进行筛选 -->
         </if>
+        <if test="courseId != null and courseId != ''">
+            AND cl.course_id = #{courseId}  <!-- 根据课程名称进行筛选 -->
+        </if>
+    </select>
+
+
+    <select id="showStuentScoreList" resultType="com.example.StudentCourse.pojo.CourseSelection">
+        select cs.student_id, cs.course_id, c.course_name, s.name, cs.normal_score, cs.test_score, cs.total_score, cs.class_id
+        from course_selection cs
+        join student s on cs.student_id = s.student_id
+        join course c on cs.course_id = c.course_id
+        where cs.staff_id = #{teacherId}
+        <if test="semester != null and semester != ''">
+            AND cs.semester = #{semester}  <!-- 根据传入的学期进行筛选 -->
+        </if>
+        <if test="courseId != null and courseId != ''">
+            AND cs.course_id = #{courseId}  <!-- 根据课程名称进行筛选 -->
+        </if>
+        <if test="classId != null and classId != ''">
+            AND cs.class_id = #{classId}  <!-- 根据班级名称进行筛选 -->
+        </if>
+        order by cs.student_id
     </select>
 </mapper>

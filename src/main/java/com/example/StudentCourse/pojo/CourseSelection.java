@@ -11,6 +11,7 @@ import java.net.InterfaceAddress;
 @NoArgsConstructor
 public class CourseSelection {
     String studentId;
+    String name;
     String semester;
     String courseId;
     String courseName;

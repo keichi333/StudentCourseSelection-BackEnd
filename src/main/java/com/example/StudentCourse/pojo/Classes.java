@@ -14,4 +14,5 @@ public class Classes {
     private String staffId;
     private String name;
     private String classTime;
+    private String classId;
 }

@@ -100,7 +100,8 @@ public class StudentServiceImpl implements StudentService {
         String semester = course.getSemester();
         String courseId = course.getCourseId();
         String staffId = course.getStaffId();
-        studentMapper.choose(studentId, semester, courseId, staffId);
+        String classTime = course.getClassTime();
+        studentMapper.choose(studentId, semester, courseId, staffId, classTime);
         return true;
     }
 

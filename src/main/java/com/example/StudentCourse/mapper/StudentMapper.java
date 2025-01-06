@@ -29,7 +29,7 @@ public interface StudentMapper {
     List<CourseSelection> getByStudentIdandSemester(String studentId, String semester);
 
     // 选课(向选课表中添加数据)
-    void choose(String studentId, String semester, String courseId, String staffId);
+    void choose(String studentId, String semester, String courseId, String staffId, String classTime);
 
     // 退课
     @Delete("delete from course_selection where student_id=#{studentId} and semester=#{semester} and course_id =#{courseId}")

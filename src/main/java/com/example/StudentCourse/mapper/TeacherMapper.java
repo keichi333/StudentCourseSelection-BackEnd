@@ -14,5 +14,8 @@ public interface TeacherMapper {
     @Select("select * from teacher where staff_id=#{staffId} and password=#{password}")
     public Teacher getByStaffIdandPassword(Teacher teacher);
 
-    public List<Classes> showTeachClass(String teacherId, String semester);
+    public List<Classes> showTeachClass(String teacherId, String semester, String courseId);
+
+
+    List<CourseSelection> showStuentScoreList(String teacherId, String semester, String courseId, String classId);
 }

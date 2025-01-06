@@ -10,6 +10,7 @@ public interface TeacherService {
 
     public Teacher login(Teacher teacher);
 
-    List<Classes> showTeachClass(String teacherId, String semester);
+    List<Classes> showTeachClass(String teacherId, String semester, String courseId);
 
+    List<CourseSelection> showStuentScore(String teacherId, String semester, String courseId, String classId);
 }

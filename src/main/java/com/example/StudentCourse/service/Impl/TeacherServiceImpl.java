@@ -22,7 +22,12 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public List<Classes> showTeachClass(String teacherId, String semester) {
-        return teacherMapper.showTeachClass(teacherId, semester);
+    public List<Classes> showTeachClass(String teacherId, String semester, String courseId) {
+        return teacherMapper.showTeachClass(teacherId, semester, courseId);
+    }
+
+    @Override
+    public List<CourseSelection> showStuentScore(String teacherId, String semester, String courseId, String classId) {
+        return teacherMapper.showStuentScoreList(teacherId, semester, courseId, classId);
     }
 }

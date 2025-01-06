@@ -5,9 +5,15 @@
 <mapper namespace="com.example.StudentCourse.mapper.StudentMapper">
 <!--    向选课表中插入数据-->
     <insert id="choose">
-        INSERT INTO course_selection (student_id, semester, course_id, staff_id)
-        VALUES (#{studentId}, #{semester}, #{courseId}, #{staffId})
+        INSERT INTO course_selection (class_id, student_id, semester, course_id, staff_id)
+        SELECT c.class_id, #{studentId}, #{semester}, #{courseId}, #{staffId}
+        FROM class c
+        WHERE c.course_id = #{courseId}
+        AND c.staff_id = #{staffId}
+        AND c.semester = #{semester}
+        AND c.class_time = #{classTime}
     </insert>
+
 
     <!--    查找课程信息-->
     <select id="showClassWithFilters" resultType="com.example.StudentCourse.pojo.Classes">
@@ -53,7 +59,7 @@
         cs.staff_id,
         t.name AS staff_name,
         c.credit,
-        cl.class_time,  <!-- 从 class 表中获取 class_time -->
+        cl.class_time, -- 从 class 表中获取 class_time
         cs.normal_score,
         cs.test_score,
         cs.total_score
@@ -61,13 +67,14 @@
         course_selection cs
         JOIN course c ON cs.course_id = c.course_id
         JOIN teacher t ON cs.staff_id = t.staff_id
-        JOIN class cl ON c.course_id = cl.course_id  <!-- 将 class 表加入查询 -->
+        JOIN class cl ON cs.course_id = cl.course_id AND cs.class_id = cl.class_id -- 确保课程和班级关联正确
         WHERE
-        cs.student_id = #{studentId}
+        cs.student_id = #{studentId} -- 筛选指定学生
         <if test="semester != null and semester != ''">
-            AND cs.semester = #{semester}  <!-- 根据传入的学期进行筛选 -->
+            AND cs.semester = #{semester} -- 根据传入的学期进行筛选
         </if>
     </select>
+
 
     <select id="getByStudentIdandSemester" resultType="com.example.StudentCourse.pojo.CourseSelection">
         SELECT

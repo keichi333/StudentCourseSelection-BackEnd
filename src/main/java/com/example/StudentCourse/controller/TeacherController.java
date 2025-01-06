@@ -7,6 +7,7 @@ import com.example.StudentCourse.service.TeacherService;
 import com.example.StudentCourse.utils.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,11 +21,22 @@ public class TeacherController {
 
 
     @GetMapping("/teacher/course")
-    public Result showTeachClass(@RequestParam(required = false) String semester){
+    public Result showTeachClass(@RequestParam(required = false) String semester,
+                                  @RequestParam(required = false) String courseId){
         String teacherId = UserContext.getUser();
 
-        List<Classes> teachList = teacherService.showTeachClass(teacherId, semester);
+        List<Classes> teachList = teacherService.showTeachClass(teacherId, semester, courseId);
         return Result.success(teachList);
     }
+
+    @GetMapping("/teacher/studentScoreList")
+    public Result showStuentScore(@RequestParam(required = false) String semester,
+                                  @RequestParam(required = false) String courseId,
+                                  @RequestParam(required = false) String classId){
+        String teacherId = UserContext.getUser();
+        List<CourseSelection> studentScoreList = teacherService.showStuentScore(teacherId, semester, courseId, classId);
+        return Result.success(studentScoreList);
+    }
+
 
 }
