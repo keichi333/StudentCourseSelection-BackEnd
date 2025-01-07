@@ -77,6 +77,7 @@ public class LoginCheckIntercepter implements HandlerInterceptor {
         else if(userRole.equals("student")){
             String Id = claims.get("Id", String.class);
             UserContext.setUser(Id);
+            log.info("学生用户已登录，ID: {}", Id);
         }
         log.info("令牌合法，放行");
         return true;
@@ -84,8 +85,9 @@ public class LoginCheckIntercepter implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        UserContext.removeTeacher();
-        UserContext.removeUser();
+       UserContext.clearContext(); // 清除用户信息
+        log.info("学生信息已清除:{}", UserContext.getUser());
+        log.info("教师信息已清除:{}", UserContext.getTeacher());
     }
 
 }

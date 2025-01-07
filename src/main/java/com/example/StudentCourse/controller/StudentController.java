@@ -63,6 +63,7 @@ public class StudentController {
         }
     }
 
+    // 退课
     @DeleteMapping("student/delete")
     public Result deleteClass(@RequestBody CourseSelection course){
         String studentId = UserContext.getUser();
@@ -70,14 +71,15 @@ public class StudentController {
         return Result.success();
     }
 
-    @GetMapping("student/info")
     // 显示学生个人信息
+    @GetMapping("student/info")
     public Result showInfo(){
         String studentId = UserContext.getUser();
         Student stu = studentService.showInfo(studentId);
         return Result.success(stu);
     }
 
+    // 更新学生个人信息
     @PutMapping("student/updateinfo")
     public Result updateInfo(@RequestBody Student stu){
 
@@ -85,6 +87,7 @@ public class StudentController {
         return Result.success();
     }
 
+    // 更新密码
     @PutMapping("student/updatepassword")
     public Result updatePassword(@RequestBody Password password){
         String studentId = UserContext.getUser();
@@ -100,8 +103,6 @@ public class StudentController {
             studentService.updatePassword(studentId, password.getNewPassword());
         }
         return Result.success();
-
-
     }
 
 }
