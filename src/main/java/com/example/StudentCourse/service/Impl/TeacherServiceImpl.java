@@ -4,6 +4,7 @@ import com.example.StudentCourse.mapper.TeacherMapper;
 import com.example.StudentCourse.pojo.Classes;
 import com.example.StudentCourse.pojo.CourseSelection;
 import com.example.StudentCourse.pojo.Teacher;
+import com.example.StudentCourse.pojo.scoreDistribution;
 import com.example.StudentCourse.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,4 +51,19 @@ public class TeacherServiceImpl implements TeacherService {
             teacherMapper.updateScore(courseId, semester, teacherId, studentId, normalScore, testScore, totalScore);
         }
     }
+
+    @Override
+    public List<scoreDistribution> ScoreDistribution(String teacherId, String semester, String courseId, String classId) {
+        return teacherMapper.ScoreDistribution(teacherId, semester, courseId, classId);
+    }
+    @Override
+    public List<scoreDistribution> NormalScoreDistribution(String teacherId, String semester, String courseId, String classId) {
+        return teacherMapper.NormalScoreDistribution(teacherId, semester, courseId, classId);
+    }
+    @Override
+    public List<scoreDistribution> TestScoreDistribution(String teacherId, String semester, String courseId, String classId) {
+        return teacherMapper.TestScoreDistribution(teacherId, semester, courseId, classId);
+    }
+
+
 }

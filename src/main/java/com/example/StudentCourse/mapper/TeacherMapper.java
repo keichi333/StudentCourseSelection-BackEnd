@@ -3,6 +3,7 @@ package com.example.StudentCourse.mapper;
 import com.example.StudentCourse.pojo.Classes;
 import com.example.StudentCourse.pojo.CourseSelection;
 import com.example.StudentCourse.pojo.Teacher;
+import com.example.StudentCourse.pojo.scoreDistribution;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -20,4 +21,10 @@ public interface TeacherMapper {
     List<CourseSelection> showStuentScoreList(String teacherId, String semester, String courseId, String classId);
 
     void updateScore(String courseId, String semester, String teacherId, String studentId, Integer normalScore, Integer testScore, Integer totalScore);
+
+    List<scoreDistribution> ScoreDistribution(String teacherId, String semester, String courseId, String classId);
+
+    List<scoreDistribution> NormalScoreDistribution(String teacherId, String semester, String courseId, String classId);
+
+    List<scoreDistribution> TestScoreDistribution(String teacherId, String semester, String courseId, String classId);
 }

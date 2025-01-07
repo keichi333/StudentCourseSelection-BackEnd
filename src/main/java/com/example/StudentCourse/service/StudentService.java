@@ -18,7 +18,7 @@ public interface StudentService {
     List<CourseSelection> showSelection(String studentId, String semester);
 
     // 选择课程
-    Boolean chooseClass(String studentId, Classes course);
+    Integer chooseClass(String studentId, Classes course);
 
     // 退课
     void deleteClass(String studentId, CourseSelection course);

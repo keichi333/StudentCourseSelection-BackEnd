@@ -45,4 +45,78 @@
         </if>
         order by cs.student_id
     </select>
+
+    <select id="ScoreDistribution" resultType="com.example.StudentCourse.pojo.scoreDistribution">
+        SELECT
+        min_score,
+        min_score + 10 AS max_score, -- 区间最高成绩
+        COUNT(*) AS number_of_students -- 统计每个区间内的人数
+        FROM (
+        SELECT
+        FLOOR(total_score / 10) * 10 AS min_score
+        FROM
+        course_selection
+        WHERE
+        staff_id = #{teacherId}
+        AND semester = #{semester}
+        AND course_id = #{courseId}
+        AND class_id = #{classId}
+        AND total_score &gt;= 0
+        AND total_score &lt;= 90
+        ) AS subquery
+        GROUP BY
+        min_score
+        ORDER BY
+        min_score;
+
+    </select>
+    <select id="NormalScoreDistribution" resultType="com.example.StudentCourse.pojo.scoreDistribution">
+        SELECT
+        min_score,
+        min_score + 10 AS max_score, -- 区间最高成绩
+        COUNT(*) AS number_of_students -- 统计每个区间内的人数
+        FROM (
+        SELECT
+        FLOOR(normal_score / 10) * 10 AS min_score
+        FROM
+        course_selection
+        WHERE
+        staff_id = #{teacherId}
+        AND semester = #{semester}
+        AND course_id = #{courseId}
+        AND class_id = #{classId}
+        AND normal_score &gt;= 0
+        AND normal_score &lt;= 90
+        ) AS subquery
+        GROUP BY
+        min_score
+        ORDER BY
+        min_score;
+    </select>
+
+    <select id="TestScoreDistribution" resultType="com.example.StudentCourse.pojo.scoreDistribution">
+        SELECT
+        min_score,
+        min_score + 10 AS max_score, -- 区间最高成绩
+        COUNT(*) AS number_of_students -- 统计每个区间内的人数
+        FROM (
+        SELECT
+        FLOOR(test_score / 10) * 10 AS min_score
+        FROM
+        course_selection
+        WHERE
+        staff_id = #{teacherId}
+        AND semester = #{semester}
+        AND course_id = #{courseId}
+        AND class_id = #{classId}
+        AND test_score &gt;= 0
+        AND test_score &lt;= 90
+        ) AS subquery
+        GROUP BY
+        min_score
+        ORDER BY
+        min_score;
+    </select>
+
+
 </mapper>
