@@ -54,15 +54,12 @@ public class StudentController {
         String studentId = UserContext.getUser();
 
         // 判断选择的课程是否有冲突
-        Integer choose = studentService.chooseClass(studentId, course);
-        if(choose == 3){
+        Boolean choose = studentService.chooseClass(studentId, course);
+        if(choose){
             return Result.success();
         }
-        else if(choose == 2){
-            return Result.error("上课时间冲突");
-        }
         else{
-            return Result.error("已选过该课程");
+            return Result.error("课时冲突/已选该课");
         }
     }
 

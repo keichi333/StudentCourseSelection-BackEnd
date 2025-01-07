@@ -30,6 +30,7 @@ public class LoginController {
         Student s = studentService.login(stu);
         if(s!=null){
             Map<String, Object> claims=new HashMap<>();
+            claims.put("role","student");
             claims.put("Id",s.getStudentId());
             claims.put("name",s.getName());
 
@@ -45,6 +46,7 @@ public class LoginController {
         Teacher t = teacherService.login(teacher);
         if(t!=null){
             Map<String, Object> claims=new HashMap<>();
+            claims.put("role","teacher");
             claims.put("Id",t.getStaffId());
             claims.put("name",t.getName());
 

@@ -82,18 +82,14 @@
           cs.semester,
           cs.course_id,
           cs.staff_id,
-          c.class_time,
-          cs.normal_score,
-          cs.test_score,
-          cs.total_score
+          cl.class_time
         FROM
           course_selection cs
         JOIN
-          class c ON cs.course_id = c.course_id
+          class cl ON cs.course_id = cl.course_id AND cs.class_id = cl.class_id -- 确保课程和班级关联正确
         WHERE
           cs.student_id = #{studentId}
           AND cs.semester = #{semester}
-          AND c.class_id = #{classId}
     </select>
 
     <select id="selectInfo" resultType="com.example.StudentCourse.pojo.Student">

@@ -20,7 +20,7 @@ public class TeacherController {
     @GetMapping("/teacher/course")
     public Result showTeachClass(@RequestParam(required = false) String semester,
                                   @RequestParam(required = false) String courseId){
-        String teacherId = UserContext.getUser();
+        String teacherId = UserContext.getTeacher();
 
         List<Classes> teachList = teacherService.showTeachClass(teacherId, semester, courseId);
         return Result.success(teachList);
@@ -30,14 +30,14 @@ public class TeacherController {
     public Result showStuentScore(@RequestParam(required = false) String semester,
                                   @RequestParam(required = false) String courseId,
                                   @RequestParam(required = false) String classId){
-        String teacherId = UserContext.getUser();
+        String teacherId = UserContext.getTeacher();
         List<CourseSelection> studentScoreList = teacherService.showStuentScore(teacherId, semester, courseId, classId);
         return Result.success(studentScoreList);
     }
 
     @PutMapping("/teacher/updateScores")
     public Result updateScores(@RequestBody List<CourseSelection> studentScoreList){
-        String teacherId = UserContext.getUser();
+        String teacherId = UserContext.getTeacher();
         teacherService.updateScores(studentScoreList, teacherId);
         return Result.success();
     }

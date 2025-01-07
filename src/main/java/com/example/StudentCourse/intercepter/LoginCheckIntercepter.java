@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
 @Slf4j
 @Component
@@ -67,13 +66,28 @@ public class LoginCheckIntercepter implements HandlerInterceptor {
             resp.getWriter().write(notLogin);  // 写入未登录信息
             return false; // 拦截请求，未登录
         }
-        // 获取 token 中的用户信息，并设置到 UserContext 中
+        // 获取 token 中的用户信息
         Claims claims = JwtUtils.parseJWT(jwt);  // 解析JWT
-        String Id = claims.get("Id", String.class);
-        System.out.println("Id: " + Id);
-        UserContext.setUser(Id);
-        // 如果 token 合法，放行请求
+        String userRole = claims.get("role", String.class);
+        if(userRole.equals("teacher")){
+            String Id = claims.get("Id", String.class);
+            UserContext.setTeacher(Id);
+            log.info("教师用户已登录，ID: {}", Id);
+        }
+        else if(userRole.equals("student")){
+            String Id = claims.get("Id", String.class);
+            UserContext.setUser(Id);
+        }
         log.info("令牌合法，放行");
         return true;
     }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        UserContext.removeTeacher();
+        UserContext.removeUser();
+    }
+
 }
+
+
