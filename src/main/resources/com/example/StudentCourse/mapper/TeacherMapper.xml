@@ -7,7 +7,7 @@
 
     <update id="updateScore">
         update course_selection
-        set normal_score = #{normalScore}, test_score = #{testScore}, total_score = #{totalScore}
+        set normal_score = #{normalScore}, test_score = #{testScore}, test_proportion = #{testProportion}, normal_proportion = #{normalProportion}
         where student_id = #{studentId}
         and course_id = #{courseId}
         and staff_id = #{teacherId}
@@ -29,7 +29,11 @@
 
 
     <select id="showStuentScoreList" resultType="com.example.StudentCourse.pojo.CourseSelection">
-        select cs.student_id, cs.course_id, c.course_name, s.name, cs.normal_score, cs.test_score, cs.total_score, cs.class_id
+        select cs.student_id,
+            cs.course_id,
+            c.course_name, s.name,
+            cs.normal_score, cs.test_score, cs.total_score,cs.GPA,
+            cs.class_id
         from course_selection cs
         join student s on cs.student_id = s.student_id
         join course c on cs.course_id = c.course_id

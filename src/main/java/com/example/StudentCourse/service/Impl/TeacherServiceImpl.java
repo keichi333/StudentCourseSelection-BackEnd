@@ -1,10 +1,7 @@
 package com.example.StudentCourse.service.Impl;
 
 import com.example.StudentCourse.mapper.TeacherMapper;
-import com.example.StudentCourse.pojo.Classes;
-import com.example.StudentCourse.pojo.CourseSelection;
-import com.example.StudentCourse.pojo.Teacher;
-import com.example.StudentCourse.pojo.scoreDistribution;
+import com.example.StudentCourse.pojo.*;
 import com.example.StudentCourse.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,22 +30,23 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public void updateScores(List<CourseSelection> studentScoreList, String teacherId) {
+    public void updateScores(List<CourseSelection> studentScoreList, Proportion proportion, String teacherId) {
         String courseId;
         String semester;
         Integer normalScore;
         Integer testScore;
-        Integer totalScore;
         String studentId;
+        Integer normalProportion = proportion.getNormalProportion();
+        Integer testProportion = proportion.getTestProportion();
         // 对studentScoreList中的每一行，进行更新
         for (CourseSelection courseSelection : studentScoreList) {
             courseId = courseSelection.getCourseId();
             semester = courseSelection.getSemester();
             normalScore = courseSelection.getNormalScore();
             testScore = courseSelection.getTestScore();
-            totalScore = courseSelection.getTotalScore();
             studentId = courseSelection.getStudentId();
-            teacherMapper.updateScore(courseId, semester, teacherId, studentId, normalScore, testScore, totalScore);
+
+            teacherMapper.updateScore(courseId, semester, teacherId, studentId, normalScore, testScore, normalProportion, testProportion);
         }
     }
 

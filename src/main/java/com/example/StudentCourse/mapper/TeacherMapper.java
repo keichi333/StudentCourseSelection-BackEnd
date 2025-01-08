@@ -20,7 +20,7 @@ public interface TeacherMapper {
 
     List<CourseSelection> showStuentScoreList(String teacherId, String semester, String courseId, String classId);
 
-    void updateScore(String courseId, String semester, String teacherId, String studentId, Integer normalScore, Integer testScore, Integer totalScore);
+    void updateScore(String courseId, String semester, String teacherId, String studentId, Integer normalScore, Integer testScore, Integer normalProportion, Integer testProportion);
 
     List<scoreDistribution> ScoreDistribution(String teacherId, String semester, String courseId, String classId);
 

@@ -1,9 +1,6 @@
 package com.example.StudentCourse.controller;
 
-import com.example.StudentCourse.pojo.Classes;
-import com.example.StudentCourse.pojo.CourseSelection;
-import com.example.StudentCourse.pojo.Result;
-import com.example.StudentCourse.pojo.scoreDistribution;
+import com.example.StudentCourse.pojo.*;
 import com.example.StudentCourse.service.TeacherService;
 import com.example.StudentCourse.utils.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +36,15 @@ public class TeacherController {
 
     // 更新学生的成绩
     @PutMapping("/teacher/updateScores")
-    public Result updateScores(@RequestBody List<CourseSelection> studentScoreList){
-        String teacherId = UserContext.getTeacher();
-        teacherService.updateScores(studentScoreList, teacherId);
-        return Result.success();
+    public Result updateScores(@RequestBody UpdateScoresRequest request){
+        // 从请求中获取学生成绩列表和比例
+        List<CourseSelection> studentList = request.getStudentList();
+        Proportion proportion = request.getProportion();
+
+        String teacherId = UserContext.getTeacher(); // 从上下文获取教师 ID
+        teacherService.updateScores(studentList, proportion, teacherId); // 调用服务层处理逻辑
+
+        return Result.success(); // 返回成功响应
     }
 
     // 查看学生的成绩分布

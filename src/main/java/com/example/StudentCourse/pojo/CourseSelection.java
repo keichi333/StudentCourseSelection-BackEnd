@@ -22,4 +22,5 @@ public class CourseSelection {
     Integer normalScore;
     Integer testScore;
     Integer totalScore;
+    Float GPA;
 }

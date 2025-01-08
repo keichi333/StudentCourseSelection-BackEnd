@@ -62,7 +62,8 @@
         cl.class_time, -- 从 class 表中获取 class_time
         cs.normal_score,
         cs.test_score,
-        cs.total_score
+        cs.total_score,
+        cs.GPA
         FROM
         course_selection cs
         JOIN course c ON cs.course_id = c.course_id

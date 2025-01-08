@@ -1,9 +1,6 @@
 package com.example.StudentCourse.service;
 
-import com.example.StudentCourse.pojo.Classes;
-import com.example.StudentCourse.pojo.CourseSelection;
-import com.example.StudentCourse.pojo.Teacher;
-import com.example.StudentCourse.pojo.scoreDistribution;
+import com.example.StudentCourse.pojo.*;
 
 import java.util.List;
 
@@ -15,7 +12,7 @@ public interface TeacherService {
 
     List<CourseSelection> showStuentScore(String teacherId, String semester, String courseId, String classId);
 
-    void updateScores(List<CourseSelection> studentScoreList, String teacherId);
+    void updateScores(List<CourseSelection> studentScoreList, Proportion proportion, String teacherId);
 
 
     List<scoreDistribution> ScoreDistribution(String teacherId, String semester, String courseId, String classId);
