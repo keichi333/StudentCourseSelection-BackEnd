@@ -53,11 +53,17 @@
     <select id="ScoreDistribution" resultType="com.example.StudentCourse.pojo.scoreDistribution">
         SELECT
         min_score,
-        min_score + 10 AS max_score, -- 区间最高成绩
+        CASE
+        WHEN min_score = 90 THEN 99 -- 单独处理 90-100 区间
+        ELSE min_score + 9
+        END AS max_score, -- 区间最高成绩
         COUNT(*) AS number_of_students -- 统计每个区间内的人数
         FROM (
         SELECT
-        FLOOR(total_score / 10) * 10 AS min_score
+        CASE
+        WHEN total_score >= 90 THEN 90 -- 将 >=90 的成绩分到 90-100 区间
+        ELSE FLOOR(total_score / 10) * 10
+        END AS min_score
         FROM
         course_selection
         WHERE
@@ -65,23 +71,27 @@
         AND semester = #{semester}
         AND course_id = #{courseId}
         AND class_id = #{classId}
-        AND total_score &gt;= 0
-        AND total_score &lt;= 90
+        AND total_score >= 0 -- 保留所有 >=0 的成绩
         ) AS subquery
         GROUP BY
         min_score
         ORDER BY
         min_score;
-
     </select>
     <select id="NormalScoreDistribution" resultType="com.example.StudentCourse.pojo.scoreDistribution">
         SELECT
         min_score,
-        min_score + 10 AS max_score, -- 区间最高成绩
+        CASE
+        WHEN min_score = 90 THEN 99 -- 单独处理 90-99 区间
+        ELSE min_score + 9
+        END AS max_score, -- 区间最高成绩
         COUNT(*) AS number_of_students -- 统计每个区间内的人数
         FROM (
         SELECT
-        FLOOR(normal_score / 10) * 10 AS min_score
+        CASE
+        WHEN normal_score >= 90 THEN 90 -- 将 >=90 的成绩分到 90-99 区间
+        ELSE FLOOR(normal_score / 10) * 10
+        END AS min_score
         FROM
         course_selection
         WHERE
@@ -89,23 +99,27 @@
         AND semester = #{semester}
         AND course_id = #{courseId}
         AND class_id = #{classId}
-        AND normal_score &gt;= 0
-        AND normal_score &lt;= 90
+        AND normal_score >= 0 -- 保留所有 >=0 的成绩
         ) AS subquery
         GROUP BY
         min_score
         ORDER BY
         min_score;
     </select>
-
     <select id="TestScoreDistribution" resultType="com.example.StudentCourse.pojo.scoreDistribution">
         SELECT
         min_score,
-        min_score + 10 AS max_score, -- 区间最高成绩
+        CASE
+        WHEN min_score = 90 THEN 99 -- 单独处理 90-100 区间
+        ELSE min_score + 9
+        END AS max_score, -- 区间最高成绩
         COUNT(*) AS number_of_students -- 统计每个区间内的人数
         FROM (
         SELECT
-        FLOOR(test_score / 10) * 10 AS min_score
+        CASE
+        WHEN test_score >= 90 THEN 90 -- 将 >=90 的成绩分到 90-100 区间
+        ELSE FLOOR(test_score / 10) * 10
+        END AS min_score
         FROM
         course_selection
         WHERE
@@ -113,8 +127,7 @@
         AND semester = #{semester}
         AND course_id = #{courseId}
         AND class_id = #{classId}
-        AND test_score &gt;= 0
-        AND test_score &lt;= 90
+        AND test_score >= 0 -- 保留所有 >=0 的成绩
         ) AS subquery
         GROUP BY
         min_score

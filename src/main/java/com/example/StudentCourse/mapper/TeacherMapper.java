@@ -23,8 +23,6 @@ public interface TeacherMapper {
     void updateScore(String courseId, String semester, String teacherId, String studentId, Integer normalScore, Integer testScore, Integer normalProportion, Integer testProportion);
 
     List<scoreDistribution> ScoreDistribution(String teacherId, String semester, String courseId, String classId);
-
     List<scoreDistribution> NormalScoreDistribution(String teacherId, String semester, String courseId, String classId);
-
     List<scoreDistribution> TestScoreDistribution(String teacherId, String semester, String courseId, String classId);
 }
