@@ -20,4 +20,10 @@ public interface TeacherService {
     List<scoreDistribution> NormalScoreDistribution(String teacherId, String semester, String courseId, String classId);
 
     List<scoreDistribution> TestScoreDistribution(String teacherId, String semester, String courseId, String classId);
+
+    Teacher showInfo(String teacherId);
+
+    boolean isPasswordEqual(String teacherId, String currentPassword);
+
+    void updatePassword(String teacherId, String newPassword);
 }

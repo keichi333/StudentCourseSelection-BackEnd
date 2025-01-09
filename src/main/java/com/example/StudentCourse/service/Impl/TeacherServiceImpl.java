@@ -63,5 +63,22 @@ public class TeacherServiceImpl implements TeacherService {
         return teacherMapper.TestScoreDistribution(teacherId, semester, courseId, classId);
     }
 
+    @Override
+    public Teacher showInfo(String teacherId) {
+        return teacherMapper.showInfo(teacherId);
+    }
+
+    @Override
+    public boolean isPasswordEqual(String teacherId, String currentPassword) {
+        String id = teacherMapper.findPassword(teacherId,currentPassword);
+        // 如果没有找到学生记录或者密码不匹配，返回 false
+        return id != null;
+    }
+
+    @Override
+    public void updatePassword(String teacherId, String newPassword) {
+        teacherMapper.updatePassword(teacherId,newPassword);
+    }
+
 
 }

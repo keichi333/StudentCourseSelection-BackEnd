@@ -6,6 +6,7 @@ import com.example.StudentCourse.pojo.Teacher;
 import com.example.StudentCourse.pojo.scoreDistribution;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -25,4 +26,13 @@ public interface TeacherMapper {
     List<scoreDistribution> ScoreDistribution(String teacherId, String semester, String courseId, String classId);
     List<scoreDistribution> NormalScoreDistribution(String teacherId, String semester, String courseId, String classId);
     List<scoreDistribution> TestScoreDistribution(String teacherId, String semester, String courseId, String classId);
+
+    // 查询教师个人信息
+    Teacher showInfo(String teacherId);
+
+    @Select("select staff_id from teacher where staff_id=#{teacherId} and password=#{currentPassword}")
+    String findPassword(String teacherId, String currentPassword);
+
+    @Update("update teacher set password=#{newPassword} where staff_id=#{teacherId}")
+    void updatePassword(String teacherId, String newPassword);
 }

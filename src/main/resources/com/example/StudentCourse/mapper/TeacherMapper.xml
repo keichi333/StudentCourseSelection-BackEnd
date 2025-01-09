@@ -110,7 +110,7 @@
         SELECT
         min_score,
         CASE
-        WHEN min_score = 90 THEN 99 -- 单独处理 90-100 区间
+        WHEN min_score = 90 THEN 99 -- 单独处理 90-99 区间
         ELSE min_score + 9
         END AS max_score, -- 区间最高成绩
         COUNT(*) AS number_of_students -- 统计每个区间内的人数
@@ -133,6 +133,13 @@
         min_score
         ORDER BY
         min_score;
+    </select>
+
+    <select id="showInfo" resultType="com.example.StudentCourse.pojo.Teacher">
+        SELECT t.staff_id, t.name, t.sex, t.date_of_birth, t.professional_ranks, t.salary, d.dept_name
+        FROM teacher t
+        JOIN department d ON t.dept_id = d.dept_id
+        WHERE t.staff_id = #{teacherId}
     </select>
 
 

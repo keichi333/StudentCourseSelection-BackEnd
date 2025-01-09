@@ -73,5 +73,31 @@ public class TeacherController {
         return Result.success(testScoreDistributionList);
     }
 
+    // 获取教师信息
+    @GetMapping("/teacher/info")
+    public Result showInfo(){
+        String teacherId = UserContext.getTeacher();
+        Teacher teacher = teacherService.showInfo(teacherId);
+        return Result.success(teacher);
+    }
+
+    // 更新密码
+    @PutMapping("/teacher/updatepassword")
+    public Result updatePassword(@RequestBody Password password){
+        String teacherId = UserContext.getTeacher();
+
+        if(!password.getNewPassword().equals(password.getConfirmPassword())){
+            return Result.error("新密码与确认密码不匹配！请重试");
+        }
+
+        if(!teacherService.isPasswordEqual(teacherId, password.getCurrentPassword())){
+            return Result.error("当前密码错误！请重试");
+        }
+        else{
+            teacherService.updatePassword(teacherId, password.getNewPassword());
+        }
+        return Result.success();
+    }
+
 
 }
