@@ -1,9 +1,6 @@
 package com.example.StudentCourse.mapper;
 
-import com.example.StudentCourse.pojo.Classes;
-import com.example.StudentCourse.pojo.CourseSelection;
-import com.example.StudentCourse.pojo.Teacher;
-import com.example.StudentCourse.pojo.scoreDistribution;
+import com.example.StudentCourse.pojo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -35,4 +32,10 @@ public interface TeacherMapper {
 
     @Update("update teacher set password=#{newPassword} where staff_id=#{teacherId}")
     void updatePassword(String teacherId, String newPassword);
+
+    @Select("select student_ids, header, content, send_time from email where staff_id=#{teacherId} and semester=#{semester} and course_id=#{courseId} and class_id=#{classId}")
+    List<Email> showEmailList(String teacherId, String semester, String courseId, String classId);
+
+    @Update("insert into email(staff_id, semester, course_id, class_id, student_ids, header, content, send_time) values(#{email.staffId}, #{email.semester}, #{email.courseId}, #{email.classId}, #{email.studentIds}, #{email.header}, #{email.content}, #{email.sendTime})")
+    void sendEmail(Email email, String teacherId);
 }

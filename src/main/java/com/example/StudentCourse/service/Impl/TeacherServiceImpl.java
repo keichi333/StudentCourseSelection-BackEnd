@@ -6,6 +6,7 @@ import com.example.StudentCourse.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -78,6 +79,19 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public void updatePassword(String teacherId, String newPassword) {
         teacherMapper.updatePassword(teacherId,newPassword);
+    }
+
+    @Override
+    public List<Email> showEmailList(String teacherId, String semester, String courseId, String classId) {
+
+        return teacherMapper.showEmailList(teacherId, semester, courseId, classId);
+    }
+
+    @Override
+    public void sendEmail(Email email, String teacherId) {
+        Date sendTime = new Date();
+        email.setSendTime(sendTime);
+        teacherMapper.sendEmail(email,teacherId);
     }
 
 

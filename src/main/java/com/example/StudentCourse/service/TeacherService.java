@@ -26,4 +26,8 @@ public interface TeacherService {
     boolean isPasswordEqual(String teacherId, String currentPassword);
 
     void updatePassword(String teacherId, String newPassword);
+
+    List<Email> showEmailList(String teacherId, String semester, String courseId, String classId);
+
+    void sendEmail(Email email, String teacherId);
 }

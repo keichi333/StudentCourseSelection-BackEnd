@@ -99,5 +99,23 @@ public class TeacherController {
         return Result.success();
     }
 
+    // 查询教师发送的通知
+    @GetMapping("/teacher/EmailList")
+    public Result showEmailList(@RequestParam String semester,
+                                @RequestParam String courseId,
+                                @RequestParam String classId){
+        String teacherId = UserContext.getTeacher();
+        List<Email> emailList = teacherService.showEmailList(teacherId, semester, courseId, classId);
+        return Result.success(emailList);
+    }
+
+    @PutMapping("/teacher/sendEmail")
+    public Result sendEmail(@RequestBody Email email){
+        String teacherId = UserContext.getTeacher();
+        email.setStaffId(teacherId);
+        teacherService.sendEmail(email, teacherId);
+        return Result.success();
+    }
+
 
 }
