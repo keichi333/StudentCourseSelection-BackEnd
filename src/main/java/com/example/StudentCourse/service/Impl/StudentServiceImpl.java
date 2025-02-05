@@ -1,10 +1,9 @@
 package com.example.StudentCourse.service.Impl;
 
 import com.example.StudentCourse.mapper.StudentMapper;
-import com.example.StudentCourse.pojo.Classes;
-import com.example.StudentCourse.pojo.CourseSelection;
-import com.example.StudentCourse.pojo.Student;
+import com.example.StudentCourse.pojo.*;
 import com.example.StudentCourse.service.StudentService;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +30,16 @@ public class StudentServiceImpl implements StudentService {
 
     // 分页查询课程数据，支持搜索条件
     @Override
-    public List<Classes> showClass(int page, int size, String semester, String courseId, String courseName,
-                                   String staffId, String name, String classTime) {
+    public PageResult showClass(int page, int size, String semester, String courseId, String courseName,
+                                String staffId, String name, String classTime) {
         // 使用 PageHelper 插件进行分页
         PageHelper.startPage(page, size);
 
         // 调用 Mapper 查询方法，传入搜索条件
-        return studentMapper.showClassWithFilters(semester, courseId, courseName, staffId, name, classTime);
+        List<Classes> classList = studentMapper.showClassWithFilters(semester, courseId, courseName, staffId, name, classTime);
+        Page<Classes> p = (Page<Classes>) classList;
+
+        return new PageResult(p.getTotal(), p.getResult());
     }
 
     // 查询学生的选课情况
@@ -137,6 +139,16 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void updatePassword(String studentId, String newPassword) {
         studentMapper.updatePassword(studentId,newPassword);
+    }
+
+    @Override
+    public List<Email> showEmailList(String studentId) {
+        return studentMapper.showEmailList(studentId);
+    }
+
+    @Override
+    public String getCurrentSemester() {
+        return studentMapper.getCurrentSemester();
     }
 
 

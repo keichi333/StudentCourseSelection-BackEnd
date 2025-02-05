@@ -17,6 +17,13 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
+    // 获取当前学期
+    @GetMapping("student/semester")
+    public Result getCurrentSemester(){
+        String semester = studentService.getCurrentSemester();
+        return Result.success(semester);
+    }
+
     // 显示所有的课程，并支持搜索功能
     @GetMapping("student/course")
     public Result showClass(
@@ -29,10 +36,10 @@ public class StudentController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String classTime) {
 
-        // 调用服务层方法，传递分页和搜索条件
-        List<Classes> classList = studentService.showClass(page, size, semester, courseId, courseName, staffId, name, classTime);
+        PageResult pageResult = studentService.showClass(page, size, semester, courseId, courseName, staffId, name, classTime);
 
-        return Result.success(classList);
+        // 返回包含总条数和课程列表的结果
+        return Result.success(pageResult);
     }
 
     // 显示该学生选课情况
@@ -106,6 +113,14 @@ public class StudentController {
             studentService.updatePassword(studentId, password.getNewPassword());
         }
         return Result.success();
+    }
+
+    // 查询通知
+    @GetMapping("student/EmailList")
+    public Result showEmailList(){
+        String studentId = UserContext.getUser();
+        List<Email> emailList = studentService.showEmailList(studentId);
+        return Result.success(emailList);
     }
 
 }

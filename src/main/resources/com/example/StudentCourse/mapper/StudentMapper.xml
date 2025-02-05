@@ -100,5 +100,29 @@
         WHERE s.student_id = #{studentId}
     </select>
 
+<!--    查看通知列表-->
+    <select id="showEmailList" resultType="com.example.StudentCourse.pojo.Email">
+        SELECT
+        e.semester,
+        t.name as staff_name,
+        c.course_name,
+        e.class_id,
+        e.header,
+        e.content,
+        e.send_time
+        FROM
+        email e
+        JOIN
+        course c ON e.course_id = c.course_id
+        JOIN
+        teacher t ON e.staff_id = t.staff_id
+        WHERE
+        e.student_ids LIKE CONCAT('%,', #{studentId}, ',%')
+        OR e.student_ids LIKE CONCAT(#{studentId}, ',%')
+        OR e.student_ids LIKE CONCAT('%,', #{studentId})
+        OR e.student_ids = #{studentId};
+    </select>
+
+
 
 </mapper>

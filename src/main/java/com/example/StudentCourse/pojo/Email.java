@@ -11,12 +11,13 @@ import java.util.Date;
 @NoArgsConstructor
 public class Email {
     private String staffId;
+    private String staffName;
     private String semester;
     private String courseId;
+    private String courseName;
     private String classId;
     private String studentIds;
     private String header;
     private String content;
     private Date sendTime;
-
 }

@@ -2,6 +2,7 @@ package com.example.StudentCourse.mapper;
 
 import com.example.StudentCourse.pojo.Classes;
 import com.example.StudentCourse.pojo.CourseSelection;
+import com.example.StudentCourse.pojo.Email;
 import com.example.StudentCourse.pojo.Student;
 import org.apache.ibatis.annotations.*;
 
@@ -21,6 +22,8 @@ public interface StudentMapper {
                                        @Param("staffId") String staffId,
                                        @Param("name") String name,
                                        @Param("classTime") String classTime);
+
+    int getClassCount(String semester, String courseId, String courseName, String staffId, String name, String classTime);
 
     // 显示选课情况
     List<CourseSelection> showSelection(String studentId, String semester);
@@ -49,4 +52,12 @@ public interface StudentMapper {
     // 修改密码
     @Update("update student set password=#{newPassword} where student_id=#{studentId}")
     void updatePassword(String studentId, String newPassword);
+
+    // 查看通知列表
+    List<Email> showEmailList(String studentId);
+
+    // 获取当前学期
+    @Select("select semester from semester where id='1'")
+    String getCurrentSemester();
+
 }

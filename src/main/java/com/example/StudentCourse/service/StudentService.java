@@ -1,8 +1,6 @@
 package com.example.StudentCourse.service;
 
-import com.example.StudentCourse.pojo.Classes;
-import com.example.StudentCourse.pojo.CourseSelection;
-import com.example.StudentCourse.pojo.Student;
+import com.example.StudentCourse.pojo.*;
 
 import java.util.List;
 
@@ -11,8 +9,8 @@ public interface StudentService {
     Student login(Student stu);
 
     // 查看课程，支持分页和搜索功能
-    List<Classes> showClass(int page, int size, String semester, String courseId, String courseName,
-                            String staffId, String name, String classTime);
+    PageResult showClass(int page, int size, String semester, String courseId, String courseName,
+                         String staffId, String name, String classTime);
 
     // 查看选课情况
     List<CourseSelection> showSelection(String studentId, String semester);
@@ -34,5 +32,11 @@ public interface StudentService {
 
     // 修改密码
     void updatePassword(String studentId, String newPassword);
+
+    // 查看通知列表
+    List<Email> showEmailList(String studentId);
+
+    // 获取当前学期
+    String getCurrentSemester();
 }
 
