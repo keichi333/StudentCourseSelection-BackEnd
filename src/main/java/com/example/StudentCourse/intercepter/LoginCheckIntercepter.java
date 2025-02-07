@@ -42,8 +42,8 @@ public class LoginCheckIntercepter implements HandlerInterceptor {
 
         // 获取请求头中的 Authorization 字段
         String authorizationHeader = req.getHeader("Authorization");
+        log.info("请求的 Authorization 头部: {}", authorizationHeader);
 
-        // 判断 Authorization 是否存在，并且格式是否为 "Bearer <token>"
         if (!StringUtils.hasLength(authorizationHeader) || !authorizationHeader.startsWith("Bearer ")) {
             log.info("Authorization 头为空或格式不正确，返回未登录的信息");
             Result error = Result.error("NOT_LOGIN");
@@ -78,6 +78,11 @@ public class LoginCheckIntercepter implements HandlerInterceptor {
             String Id = claims.get("Id", String.class);
             UserContext.setUser(Id);
             log.info("学生用户已登录，ID: {}", Id);
+        }
+        else if(userRole.equals("admin")){
+            String Id = claims.get("Id", String.class);
+            UserContext.setUser(Id);
+            log.info("管理员用户已登录，ID: {}", Id);
         }
         log.info("令牌合法，放行");
         return true;

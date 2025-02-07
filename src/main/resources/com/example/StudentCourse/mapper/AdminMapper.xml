@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.StudentCourse.mapper.AdminMapper">
+
+    <select id="showStudentWithFilters" resultType="com.example.StudentCourse.pojo.Student">
+        SELECT
+        s.student_id,
+        s.name,
+        s.sex,
+        s.date_of_birth,
+        s.native_place,
+        s.mobile_phone,
+        d.dept_name
+        FROM student s
+        JOIN department d ON s.dept_id = d.dept_id
+        <where>
+            <if test="studentId != null and studentId != ''">
+                AND s.student_id = #{studentId}
+            </if>
+            <if test="name != null and name != ''">
+                AND s.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="sex != null and sex != ''">
+                AND s.sex = #{sex}
+            </if>
+            <if test="dateOfBirth != null and dateOfBirth != ''">
+                AND s.date_of_birth = #{dateOfBirth}
+            </if>
+            <if test="nativePlace != null and nativePlace != ''">
+                AND s.native_place LIKE CONCAT('%', #{nativePlace}, '%')
+            </if>
+            <if test="mobilePhone != null and mobilePhone != ''">
+                AND s.mobile_phone LIKE CONCAT('%', #{mobilePhone}, '%')
+            </if>
+            <if test="deptName != null and deptName != ''">
+                AND d.dept_name LIKE CONCAT('%', #{deptName}, '%')
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

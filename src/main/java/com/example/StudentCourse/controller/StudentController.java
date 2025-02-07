@@ -44,7 +44,7 @@ public class StudentController {
 
     // 显示该学生选课情况
     @GetMapping("student/selection")
-    public Result showSelection(@RequestParam(required = false) String semester) {
+    public Result showSelection(@RequestParam String semester) {
         // 从线程变量UserContext中获取 student_id
         String studentId = UserContext.getUser();
 

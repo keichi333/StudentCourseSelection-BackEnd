@@ -15,4 +15,6 @@ public class Classes {
     private String name;
     private String classTime;
     private String classId;
+    private Integer maxNumber;
+    private Integer curNumber;
 }

@@ -23,8 +23,6 @@ public interface StudentMapper {
                                        @Param("name") String name,
                                        @Param("classTime") String classTime);
 
-    int getClassCount(String semester, String courseId, String courseName, String staffId, String name, String classTime);
-
     // 显示选课情况
     List<CourseSelection> showSelection(String studentId, String semester);
 
@@ -32,7 +30,7 @@ public interface StudentMapper {
     List<CourseSelection> getByStudentIdandSemester(String studentId, String semester);
 
     // 选课(向选课表中添加数据)
-    void choose(String studentId, String semester, String courseId, String staffId, String classTime);
+    void choose(String studentId, String semester, String courseId, String staffId, String classId);
 
     // 退课
     @Delete("delete from course_selection where student_id=#{studentId} and semester=#{semester} and course_id =#{courseId}")
@@ -60,4 +58,7 @@ public interface StudentMapper {
     @Select("select semester from semester where id='1'")
     String getCurrentSemester();
 
+    // 新增学生
+    @Insert("insert into student(student_id, name, password, sex, date_of_birth, native_place, mobile_phone, dept_id) values(#{studentId}, #{name}, '123456', #{sex}, #{dateOfBirth}, #{nativePlace}, #{mobilePhone}, #{deptId})")
+    void addStudent(Student student);
 }

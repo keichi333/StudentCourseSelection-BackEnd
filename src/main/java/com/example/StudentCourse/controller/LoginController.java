@@ -1,8 +1,10 @@
 package com.example.StudentCourse.controller;
 
+import com.example.StudentCourse.pojo.Admin;
 import com.example.StudentCourse.pojo.Result;
 import com.example.StudentCourse.pojo.Student;
 import com.example.StudentCourse.pojo.Teacher;
+import com.example.StudentCourse.service.AdminService;
 import com.example.StudentCourse.service.StudentService;
 import com.example.StudentCourse.service.TeacherService;
 import com.example.StudentCourse.utils.JwtUtils;
@@ -24,6 +26,9 @@ public class LoginController {
 
     @Autowired
     private TeacherService teacherService;
+
+    @Autowired
+    private AdminService adminService;
 
     @PostMapping("/login")
     public Result Login(@RequestBody Student stu){
@@ -49,6 +54,22 @@ public class LoginController {
             claims.put("role","teacher");
             claims.put("Id",t.getStaffId());
             claims.put("name",t.getName());
+
+            String jwt=JwtUtils.generateJwt(claims);
+            return Result.success(jwt);
+        }
+
+        return Result.error("用户名或密码错误");
+    }
+
+    @PostMapping("/login/admin")
+    public Result LoginAdmin(@RequestBody Admin admin){
+        Admin a = adminService.login(admin);
+        if(a!=null){
+            Map<String, Object> claims=new HashMap<>();
+            claims.put("role","admin");
+            claims.put("Id",a.getAdminId());
+            claims.put("name",a.getName());
 
             String jwt=JwtUtils.generateJwt(claims);
             return Result.success(jwt);
