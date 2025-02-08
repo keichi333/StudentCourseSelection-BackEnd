@@ -23,4 +23,5 @@ public class CourseSelection {
     Integer testScore;
     Integer totalScore;
     Float GPA;
+    String classId;
 }

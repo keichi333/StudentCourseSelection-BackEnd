@@ -15,6 +15,9 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
+    @Autowired
+    private StudentService studentService;
+
     // **************************
     // **************************
     // 标头的一些操作
@@ -65,7 +68,7 @@ public class AdminController {
     // **************************
     // 学生信息管理的一些操作
 
-    // 显示所有的课程，并支持搜索功能
+    // 显示所有学生信息，并支持搜索功能
     @GetMapping("admin/studentlist")
     public Result showClass(
             @RequestParam int page,
@@ -119,6 +122,82 @@ public class AdminController {
         return Result.success();
     }
 
+    // 显示所有学生选课，并支持搜索功能
+    @GetMapping("admin/studentcourselist")
+    public Result showSelection(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam String semester,
+            @RequestParam(required = false) String studentId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String courseId,
+            @RequestParam(required = false) String courseName,
+            @RequestParam(required = false) String classId,
+            @RequestParam(required = false) String staffId,
+            @RequestParam(required = false) String staffName,
+            @RequestParam(required = false) String credit,
+            @RequestParam(required = false) String classTime) {
+
+        PageResult3 pageResult = adminService.showStudentCourseList(page, size, semester, studentId, name, courseId, courseName, classId, staffId, staffName, credit, classTime);
+
+        // 返回包含总条数和课程列表的结果
+        return Result.success(pageResult);
+    }
+
+    // 删除学生选课
+    @DeleteMapping("admin/studentcourse")
+    public Result deleteClass(@RequestParam String studentId, @RequestParam String courseId, @RequestParam String classId, @RequestParam String semester) {
+        adminService.deleteClass(studentId, courseId, classId, semester);
+        return Result.success();
+    }
+
+    // 显示某具体学生选课情况
+    @GetMapping("admin/selection")
+    public Result showStudentSelection(@RequestParam String studentId, @RequestParam String semester) {
+
+        // 调用服务层方法，传递学期参数（如果有）
+        List<CourseSelection> selectionList = studentService.showSelection(studentId, semester);
+
+        return Result.success(selectionList);
+    }
+
+    // 显示所有课程
+    @GetMapping("admin/courses")
+    public Result showCourseList(@RequestParam String semester,
+                                 @RequestParam(required = false) String courseId) {
+
+        List<Classes> courseList = adminService.showCourseList(semester, courseId);
+        return Result.success(courseList);
+    }
+
+    // 为某具体学生选课
+    @PostMapping("admin/studentcourse")
+    public Result addCourse(@RequestParam String studentId,
+                            @RequestParam String semester,
+                            @RequestParam String courseId,
+                            @RequestParam String staffId,
+                            @RequestParam String classId,
+                            @RequestParam String classTime) {
+        Classes course = new Classes();
+        course.setSemester(semester);
+        course.setCourseId(courseId);
+        course.setStaffId(staffId);
+        course.setClassId(classId);
+        course.setClassTime(classTime);
+
+        // 判断选择的课程是否有冲突
+        Integer choose = studentService.chooseClass(studentId, course);
+        if(choose==3){
+            return Result.success();
+        }
+        else if(choose==2){
+            return Result.error("上课时间冲突！请重新选择");
+        }
+        else{
+            return Result.error("已选过该门课程！请勿重复选择");
+        }
+
+    }
 
 
 }

@@ -40,5 +40,56 @@
         </where>
     </select>
 
+    <select id="showCourseSelectionWithFilters" resultType="com.example.StudentCourse.pojo.CourseSelection">
+        SELECT
+        cs.student_id,
+        s.name,
+        c.course_id,
+        c.course_name,
+        cs.class_id,
+        cs.staff_id,
+        t.name as staff_name,
+        c.credit,
+        cl.class_time
+        FROM course_selection cs
+        JOIN course c ON cs.course_id = c.course_id
+        JOIN teacher t ON cs.staff_id = t.staff_id
+        JOIN student s ON cs.student_id = s.student_id
+        JOIN class cl ON cs.course_id = cl.course_id AND cs.class_id = cl.class_id
+        <where>
+            <if test="semester != null and semester != ''">
+                AND cs.semester = #{semester}
+            </if>
+            <if test="studentId != null and studentId != ''">
+                AND cs.student_id = #{studentId}
+            </if>
+            <if test="name != null and name != ''">
+                AND s.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="courseId != null and courseId != ''">
+                AND c.course_id = #{courseId}
+            </if>
+            <if test="courseName != null and courseName != ''">
+                AND c.course_name LIKE CONCAT('%', #{courseName}, '%')
+            </if>
+            <if test="classId != null and classId != ''">
+                AND cs.class_id = #{classId}
+            </if>
+            <if test="staffId != null and staffId != ''">
+                AND cs.staff_id = #{staffId}
+            </if>
+            <if test="staffName != null and staffName != ''">
+                AND t.name LIKE CONCAT('%', #{staffName}, '%')
+            </if>
+            <if test="credit != null and credit != ''">
+                AND c.credit = #{credit}
+            </if>
+            <if test="classTime != null and classTime != ''">
+                AND cl.class_time = #{classTime}
+            </if>
+        </where>
+        ORDER BY cs.student_id
+    </select>
+
 
 </mapper>

@@ -1,9 +1,6 @@
 package com.example.StudentCourse.service;
 
-import com.example.StudentCourse.pojo.Admin;
-import com.example.StudentCourse.pojo.PageResult2;
-import com.example.StudentCourse.pojo.Student;
-import com.example.StudentCourse.pojo.Teacher;
+import com.example.StudentCourse.pojo.*;
 
 import java.util.List;
 
@@ -31,4 +28,10 @@ public interface AdminService {
     void resetPassword(String studentId);
 
     void addStudent(Student student);
+
+    PageResult3 showStudentCourseList(int page, int size, String semester, String studentId, String name, String courseId, String courseName, String classId, String staffId, String staffName, String credit, String classTime);
+
+    void deleteClass(String studentId, String courseId, String classId, String semester);
+
+    List<Classes> showCourseList(String semester, String courseId);
 }

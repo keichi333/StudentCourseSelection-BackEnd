@@ -54,6 +54,7 @@ public class StudentServiceImpl implements StudentService {
     public Integer chooseClass(String studentId, Classes course) {
         // 1、获取该学生在指定学期已选的课程列表
         List<CourseSelection> courseList = studentMapper.getByStudentIdandSemester(studentId, course.getSemester());
+        log.info("已选课程列表：{}", courseList);
 
         // 2、判断是否有已选课程或者时间重叠的课程
 

@@ -61,7 +61,8 @@
         cs.normal_score,
         cs.test_score,
         cs.total_score,
-        cs.GPA
+        cs.GPA,
+        cs.class_id
         FROM
         course_selection cs
         JOIN course c ON cs.course_id = c.course_id

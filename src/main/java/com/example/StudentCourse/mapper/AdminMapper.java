@@ -1,7 +1,9 @@
 package com.example.StudentCourse.mapper;
 
 import com.example.StudentCourse.pojo.Admin;
+import com.example.StudentCourse.pojo.CourseSelection;
 import com.example.StudentCourse.pojo.Student;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -49,4 +51,11 @@ public interface AdminMapper {
     // 删除学生
     @Select("CALL DeleteStudentWithSelection(#{studentId})")
     void deleteStudent(String studentId);
+
+    // 查询选课信息
+    List<CourseSelection> showCourseSelectionWithFilters(String semester, String studentId, String name, String courseId, String courseName, String classId, String staffId, String staffName, String credit, String classTime);
+
+    // 删除选课信息
+    @Delete("delete from course_selection where student_id=#{studentId} and course_id=#{courseId} and class_id=#{classId} and semester=#{semester}")
+    void deleteClass(String studentId, String courseId, String classId, String semester);
 }

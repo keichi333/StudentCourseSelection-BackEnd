@@ -99,4 +99,26 @@ public class AdminServiceImpl implements AdminService {
 
         studentMapper.addStudent(student);
     }
+
+    @Override
+    public PageResult3 showStudentCourseList(int page, int size, String semester, String studentId, String name, String courseId, String courseName, String classId, String staffId, String staffName, String credit, String classTime) {
+        // 使用 PageHelper 插件进行分页
+        PageHelper.startPage(page, size);
+
+        // 调用 Mapper 查询方法，传入搜索条件
+        List<CourseSelection> studentCourseList = adminMapper.showCourseSelectionWithFilters(semester, studentId, name, courseId, courseName, classId, staffId, staffName, credit, classTime);
+        Page<CourseSelection> c = (Page<CourseSelection>) studentCourseList;
+
+        return new PageResult3(c.getTotal(), c.getResult());
+    }
+
+    @Override
+    public void deleteClass(String studentId, String courseId, String classId, String semester) {
+        adminMapper.deleteClass(studentId, courseId, classId, semester);
+    }
+
+    @Override
+    public List<Classes> showCourseList(String semester, String courseId) {
+        return studentMapper.showClassWithFilters(semester, courseId, null, null, null, null);
+    }
 }
