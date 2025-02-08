@@ -200,4 +200,56 @@ public class AdminController {
     }
 
 
+    // **************************
+    // **************************
+    // 教师信息管理的一些操作
+
+    // 显示所有教师信息，并支持搜索功能
+    @GetMapping("admin/teacherlist")
+    public Result showTeacherList(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam(required = false) String staffId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String sex,
+            @RequestParam(required = false) String dateOfBirth,
+            @RequestParam(required = false) String professionalRanks,
+            @RequestParam(required = false) String salary,
+            @RequestParam(required = false) String deptName) {
+
+        PageResult4 pageResult = adminService.showTeacherList(page, size, staffId, name, sex, dateOfBirth, professionalRanks, salary, deptName);
+
+        // 返回包含总条数和课程列表的结果
+        return Result.success(pageResult);
+    }
+
+    // 删除教师信息
+    @DeleteMapping("admin/teacher/{staffId}")
+    public Result deleteTeacher(@PathVariable String staffId){
+        adminService.deleteTeacher(staffId);
+        return Result.success();
+    }
+
+    // 更新教师信息
+    @PutMapping("admin/teacher/{staffId}")
+    public Result updateTeacher(@PathVariable String staffId, @RequestBody Teacher teacher){
+        adminService.updateTeacher(staffId, teacher);
+        return Result.success();
+    }
+
+    // 重置密码
+    @PutMapping("admin/teacher/passwordreset/{staffId}")
+    public Result resetTeacherPassword(@PathVariable String staffId){
+        adminService.resetTeacherPassword(staffId);
+        return Result.success();
+    }
+
+    // 新增教师信息
+    @PostMapping("admin/teacher")
+    public Result addTeacher(@RequestBody Teacher teacher){
+        adminService.addTeacher(teacher);
+        return Result.success();
+    }
+
+
 }

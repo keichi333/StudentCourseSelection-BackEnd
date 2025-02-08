@@ -2,6 +2,7 @@ package com.example.StudentCourse.service.Impl;
 
 import com.example.StudentCourse.mapper.AdminMapper;
 import com.example.StudentCourse.mapper.StudentMapper;
+import com.example.StudentCourse.mapper.TeacherMapper;
 import com.example.StudentCourse.pojo.*;
 import com.example.StudentCourse.service.AdminService;
 import com.github.pagehelper.Page;
@@ -21,6 +22,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private StudentMapper studentMapper;
+
+    @Autowired
+    private TeacherMapper teacherMapper;
 
     @Override
     public Admin login(Admin admin) {
@@ -120,5 +124,45 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<Classes> showCourseList(String semester, String courseId) {
         return studentMapper.showClassWithFilters(semester, courseId, null, null, null, null);
+    }
+
+    @Override
+    public PageResult4 showTeacherList(int page, int size, String staffId, String name, String sex, String dateOfBirth, String professionalRanks, String salary, String deptName) {
+        // 使用 PageHelper 插件进行分页
+        PageHelper.startPage(page, size);
+
+        // 调用 Mapper 查询方法，传入搜索条件
+        List<Teacher> teacherList = adminMapper.showTeacherWithFilters(staffId, name, sex, dateOfBirth, professionalRanks, salary, deptName);
+        Page<Teacher> t = (Page<Teacher>) teacherList;
+
+        return new PageResult4(t.getTotal(), t.getResult());
+    }
+
+    @Override
+    public void deleteTeacher(String staffId) {
+        adminMapper.deleteTeacher(staffId);
+    }
+
+    @Override
+    public void updateTeacher(String staffId, Teacher teacher) {
+        String deptName = teacher.getDeptName();
+        String deptId = adminMapper.selectDeptIdByName(deptName);
+        teacher.setDeptId(deptId);
+
+        adminMapper.updateTeacher(staffId, teacher);
+    }
+
+    @Override
+    public void resetTeacherPassword(String staffId) {
+        teacherMapper.updatePassword(staffId, "123456");
+    }
+
+    @Override
+    public void addTeacher(Teacher teacher) {
+        String deptName = teacher.getDeptName();
+        String deptId = adminMapper.selectDeptIdByName(deptName);
+        teacher.setDeptId(deptId);
+
+        adminMapper.addTeacher(teacher);
     }
 }

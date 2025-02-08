@@ -3,10 +3,8 @@ package com.example.StudentCourse.mapper;
 import com.example.StudentCourse.pojo.Admin;
 import com.example.StudentCourse.pojo.CourseSelection;
 import com.example.StudentCourse.pojo.Student;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import com.example.StudentCourse.pojo.Teacher;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -58,4 +56,19 @@ public interface AdminMapper {
     // 删除选课信息
     @Delete("delete from course_selection where student_id=#{studentId} and course_id=#{courseId} and class_id=#{classId} and semester=#{semester}")
     void deleteClass(String studentId, String courseId, String classId, String semester);
+
+    // 查询教师信息
+    List<Teacher> showTeacherWithFilters(String staffId, String name, String sex, String dateOfBirth, String professionalRanks, String salary, String deptName);
+
+    // 删除教师信息
+    @Select("CALL DeleteTeacherWithSelection(#{staffId})")
+    void deleteTeacher(String staffId);
+
+    // 修改教师信息
+    @Update("update teacher set name=#{teacher.name}, sex=#{teacher.sex}, date_of_birth=#{teacher.dateOfBirth}, professional_ranks=#{teacher.professionalRanks}, salary=#{teacher.salary}, dept_id=#{teacher.deptId} where staff_id=#{teacher.staffId}")
+    void updateTeacher(String staffId, Teacher teacher);
+
+    // 新增教师
+    @Insert("insert into teacher(staff_id, name, password, sex, date_of_birth, professional_ranks, salary, dept_id) values(#{staffId}, #{name}, '123456', #{sex}, #{dateOfBirth}, #{professionalRanks}, #{salary}, #{deptId})")
+    void addTeacher(Teacher teacher);
 }

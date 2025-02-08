@@ -91,5 +91,42 @@
         ORDER BY cs.student_id
     </select>
 
+    <select id="showTeacherWithFilters" resultType="com.example.StudentCourse.pojo.Teacher">
+        SELECT
+        t.staff_id,
+        t.name,
+        t.sex,
+        t.date_of_birth,
+        t.professional_ranks,
+        t.salary,
+        d.dept_name
+        FROM teacher t
+        JOIN department d ON t.dept_id = d.dept_id
+        <where>
+            <if test="staffId != null and staffId != ''">
+                AND t.staff_id = #{staffId}
+            </if>
+            <if test="name != null and name != ''">
+                AND t.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="sex != null and sex != ''">
+                AND t.sex = #{sex}
+            </if>
+            <if test="dateOfBirth != null and dateOfBirth != ''">
+                AND t.date_of_birth = #{dateOfBirth}
+            </if>
+            <if test="professionalRanks != null and professionalRanks != ''">
+                AND t.professional_ranks LIKE CONCAT('%', #{professionalRanks}, '%')
+            </if>
+            <if test="salary != null and salary != ''">
+                AND t.salary = #{salary}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                AND d.dept_name LIKE CONCAT('%', #{deptName}, '%')
+            </if>
+        </where>
+    </select>
+
+
 
 </mapper>

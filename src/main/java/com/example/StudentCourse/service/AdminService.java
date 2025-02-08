@@ -34,4 +34,14 @@ public interface AdminService {
     void deleteClass(String studentId, String courseId, String classId, String semester);
 
     List<Classes> showCourseList(String semester, String courseId);
+
+    PageResult4 showTeacherList(int page, int size, String staffId, String name, String sex, String dateOfBirth, String professionalRanks, String salary, String deptName);
+
+    void deleteTeacher(String staffId);
+
+    void updateTeacher(String staffId, Teacher teacher);
+
+    void resetTeacherPassword(String staffId);
+
+    void addTeacher(Teacher teacher);
 }
