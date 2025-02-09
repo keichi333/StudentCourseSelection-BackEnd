@@ -251,5 +251,66 @@ public class AdminController {
         return Result.success();
     }
 
+    // 显示所有教师课程，并支持搜索功能
+    @GetMapping("admin/teachercourselist")
+    public Result showTeacherSelection(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam String semester,
+            @RequestParam(required = false) String staffId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String courseId,
+            @RequestParam(required = false) String courseName,
+            @RequestParam(required = false) String classId,
+            @RequestParam(required = false) String classTime) {
+
+        PageResult5 pageResult = adminService.showTeacherCourseList(page, size, semester, staffId, name, courseId, courseName, classId, classTime);
+
+        // 返回包含总条数和课程列表的结果
+        return Result.success(pageResult);
+    }
+
+    // 删除教师课程安排
+    @DeleteMapping("admin/teachercourse")
+    public Result deleteTeacherClass(@RequestParam String staffId, @RequestParam String courseId, @RequestParam String classId, @RequestParam String semester) {
+        adminService.deleteTeacherClass(staffId, courseId, classId, semester);
+        return Result.success();
+    }
+
+    // 查询所有已有课程
+    @GetMapping("admin/allcourses")
+    public Result getAllCourses(@RequestParam(required = false) String courseId) {
+        List<Course> courseList = adminService.getAllCourses(courseId);
+        return Result.success(courseList);
+    }
+
+    // 显示某具体教师课程安排情况
+    @GetMapping("admin/teachercourse")
+    public Result getTeacherCourse(@RequestParam String staffId, @RequestParam String semester) {
+        List<Classes> courseList = adminService.getTeacherCourse(staffId, semester);
+        return Result.success(courseList);
+    }
+
+    // 为某具体教师安排课程
+    @PostMapping("admin/teachercourse")
+    public Result addTeacherCourse(@RequestParam String semester,
+                                   @RequestParam String courseId,
+                                   @RequestParam String staffId,
+                                   @RequestParam String classTime,
+                                   @RequestParam String maxStudents) {
+        // 判断选择的课程是否有冲突
+        Integer choose = adminService.chooseClass(staffId, semester,courseId, classTime, maxStudents);
+        if(choose==3){
+            return Result.success();
+        }
+        else if(choose==2){
+            return Result.error("上课时间冲突！请重新选择");
+        }
+        else{
+            return Result.error("已安排过该门课程！请勿重复选择");
+        }
+
+    }
+
 
 }

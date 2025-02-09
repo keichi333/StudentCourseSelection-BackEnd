@@ -10,6 +10,7 @@ import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -164,5 +165,92 @@ public class AdminServiceImpl implements AdminService {
         teacher.setDeptId(deptId);
 
         adminMapper.addTeacher(teacher);
+    }
+
+    @Override
+    public PageResult5 showTeacherCourseList(int page, int size, String semester, String staffId, String name, String courseId, String courseName, String classId, String classTime) {
+        // 使用 PageHelper 插件进行分页
+        PageHelper.startPage(page, size);
+
+        // 调用 Mapper 查询方法，传入搜索条件
+        List<Classes> teacherCourseList = adminMapper.showTeachClass(semester, staffId, name, courseId, courseName, classId, classTime);
+        Page<Classes> tc = (Page<Classes>) teacherCourseList;
+
+        return new PageResult5(tc.getTotal(), tc.getResult());
+    }
+
+    @Override
+    public void deleteTeacherClass(String staffId, String courseId, String classId, String semester) {
+        adminMapper.deleteTeacherClass(staffId, courseId, classId, semester);
+    }
+
+    @Override
+    public List<Course> getAllCourses(String courseId) {
+        return adminMapper.getAllCourses(courseId);
+    }
+
+    @Override
+    public List<Classes> getTeacherCourse(String staffId, String semester) {
+        return adminMapper.getTeacherCourse(staffId, semester);
+    }
+
+    @Override
+    @Transactional
+    public Integer chooseClass(String staffId, String semester, String courseId, String classTime, String maxStudents) {
+        // 1、获取该教师在指定学期已选的课程列表
+        List<Classes> courseList = adminMapper.getTeacherCourse(staffId, semester);
+        log.info("已安排课程列表：{}", courseList);
+
+        // 2、判断是否有已选课程或者时间重叠的课程
+        // 解析新课程的上课时间
+        String[] newClassTimeParts = classTime.split("，");  // 分割出每一天的时间部分
+        for (String newClassTimePart : newClassTimeParts) {
+            // 分割出星期几和时间范围
+            String[] newParts = newClassTimePart.split("\\d+[-]\\d+");  // 分割出星期几部分
+            String newDay = newParts[0].trim();  // 例如 "星期三"
+            String newRange = newClassTimePart.split(newDay)[1].trim();  // 获取时间范围部分 例如 "1-4"
+            // 获取时间范围
+            String[] newRangeParts = newRange.split("-");
+            int newStart = Integer.parseInt(newRangeParts[0]);
+            int newEnd = Integer.parseInt(newRangeParts[1]);
+
+            // 遍历已选课程列表
+            for (Classes selectedCourse : courseList) {
+                // 解析已有课程的上课时间
+                String existingClassTime = selectedCourse.getClassTime();
+                String[] existingClassTimeParts = existingClassTime.split("，");  // 分割出每一天的时间部分
+                for (String existingClassTimePart : existingClassTimeParts) {
+                    // 分割出星期几和时间范围
+                    String[] existingParts = existingClassTimePart.split("\\d+[-]\\d+");  // 分割出星期几部分
+                    String existingDay = existingParts[0].trim();  // 例如 "星期三"
+                    String existingRange = existingClassTimePart.split(existingDay)[1].trim();  // 获取时间范围部分 例如 "1-4"
+                    // 获取已有课程的时间范围
+                    String[] existingRangeParts = existingRange.split("-");
+                    int existingStart = Integer.parseInt(existingRangeParts[0]);
+                    int existingEnd = Integer.parseInt(existingRangeParts[1]);
+
+                    // 检查是否在同一天
+                    if (existingDay.equals(newDay)) {
+                        // 如果时间段有重叠，返回 2
+                        if (newStart <= existingEnd && newEnd >= existingStart) {
+                            return 2;
+                        }
+                    }
+                }
+            }
+        }
+
+        // 获取到最大的 classId
+        String GetClassId = adminMapper.getMaxClassId(semester, courseId);
+
+        // 将字符串转换为整数并递增
+        int nextClassId = Integer.parseInt(GetClassId) + 1;
+
+        // 将整数转换回字符串并格式化为两位数
+        String classId = String.format("%02d", nextClassId);
+
+        // 3、将所选择的课加入到选课表中
+        adminMapper.addTeacherCourse(staffId, semester, courseId, classId, classTime, maxStudents);
+        return 3; // 成功
     }
 }

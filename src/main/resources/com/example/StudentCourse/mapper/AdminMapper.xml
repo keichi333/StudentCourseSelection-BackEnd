@@ -3,6 +3,10 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.StudentCourse.mapper.AdminMapper">
+    <insert id="addTeacherCourse">
+        INSERT INTO class(semester, course_id, staff_id, class_time, class_id,max_number, cur_number)
+        VALUES(#{semester}, #{courseId}, #{staffId}, #{classTime}, #{classId}, #{maxStudents}, 0)
+    </insert>
 
     <select id="showStudentWithFilters" resultType="com.example.StudentCourse.pojo.Student">
         SELECT
@@ -127,6 +131,66 @@
         </where>
     </select>
 
+    <select id="showTeachClass" resultType="com.example.StudentCourse.pojo.Classes">
+        SELECT
+        cl.staff_id,
+        t.name,
+        cl.course_id,
+        c.course_name,
+        cl.class_id,
+        cl.class_time
+        FROM class cl
+        JOIN course c ON cl.course_id = c.course_id
+        JOIN teacher t ON cl.staff_id = t.staff_id
+        <where>
+            <if test="semester != null and semester != ''">
+                AND cl.semester = #{semester}
+            </if>
+            <if test="staffId != null and staffId != ''">
+                AND cl.staff_id = #{staffId}
+            </if>
+            <if test="name != null and name != ''">
+                AND t.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="courseId != null and courseId != ''">
+                AND c.course_id = #{courseId}
+            </if>
+            <if test="courseName != null and courseName != ''">
+                AND c.course_name LIKE CONCAT('%', #{courseName}, '%')
+            </if>
+            <if test="classId != null and classId != ''">
+                AND cl.class_id = #{classId}
+            </if>
+            <if test="classTime != null and classTime != ''">
+                AND cl.class_time = #{classTime}
+            </if>
+
+        </where>
+        ORDER BY cl.staff_id
+    </select>
+
+    <select id="getAllCourses" resultType="com.example.StudentCourse.pojo.Course">
+        SELECT
+        c.course_id,
+        c.course_name
+        FROM course c
+        <where>
+            <if test="courseId != null and courseId != ''">
+                AND c.course_id = #{courseId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getTeacherCourse" resultType="com.example.StudentCourse.pojo.Classes">
+        SELECT
+        cl.course_id,
+        c.course_name,
+        cl.class_id,
+        cl.class_time
+        FROM class cl
+        JOIN course c ON cl.course_id = c.course_id
+        WHERE cl.staff_id = #{staffId} AND cl.semester = #{semester}
+    </select>
 
 
 </mapper>

@@ -1,9 +1,6 @@
 package com.example.StudentCourse.mapper;
 
-import com.example.StudentCourse.pojo.Admin;
-import com.example.StudentCourse.pojo.CourseSelection;
-import com.example.StudentCourse.pojo.Student;
-import com.example.StudentCourse.pojo.Teacher;
+import com.example.StudentCourse.pojo.*;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -71,4 +68,24 @@ public interface AdminMapper {
     // 新增教师
     @Insert("insert into teacher(staff_id, name, password, sex, date_of_birth, professional_ranks, salary, dept_id) values(#{staffId}, #{name}, '123456', #{sex}, #{dateOfBirth}, #{professionalRanks}, #{salary}, #{deptId})")
     void addTeacher(Teacher teacher);
+
+    // 查询教师课程
+    List<Classes> showTeachClass(String semester, String staffId, String name, String courseId, String courseName, String classId, String classTime);
+
+    // 删除教师的课程安排
+    @Select("CALL DeleteTeacherClassWithSelection(#{staffId}, #{courseId}, #{classId}, #{semester})")
+    void deleteTeacherClass(String staffId, String courseId, String classId, String semester);
+
+    // 查询所有课程
+    List<Course> getAllCourses(String courseId);
+
+    // 查询教师课程
+    List<Classes> getTeacherCourse(String staffId, String semester);
+
+    // 新增教师课程
+    void addTeacherCourse(String staffId, String semester, String courseId, String classId, String classTime, String maxStudents);
+
+    // 获取最大班级号
+    @Select("SELECT MAX(class_id) AS max_class_id FROM class WHERE semester = #{semester} AND course_id = #{courseId}")
+    String getMaxClassId(String semester, String courseId);
 }

@@ -44,4 +44,14 @@ public interface AdminService {
     void resetTeacherPassword(String staffId);
 
     void addTeacher(Teacher teacher);
+
+    PageResult5 showTeacherCourseList(int page, int size, String semester, String staffId, String name, String courseId, String courseName, String classId, String classTime);
+
+    void deleteTeacherClass(String staffId, String courseId, String classId, String semester);
+
+    List<Course> getAllCourses(String courseId);
+
+    List<Classes> getTeacherCourse(String staffId, String semester);
+
+    Integer chooseClass(String staffId, String semester, String courseId, String classTime, String maxStudents);
 }
