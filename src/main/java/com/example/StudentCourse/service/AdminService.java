@@ -54,4 +54,12 @@ public interface AdminService {
     List<Classes> getTeacherCourse(String staffId, String semester);
 
     Integer chooseClass(String staffId, String semester, String courseId, String classTime, String maxStudents);
+
+    PageResult6 showOriginCourseList(int page, int size, String courseId, String courseName, String credit, String creditHours, String deptName);
+
+    void updateCourse(String courseId, Course course);
+
+    void deleteCourse(String courseId);
+
+    void addCourse(Course course);
 }

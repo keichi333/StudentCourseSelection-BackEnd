@@ -88,4 +88,19 @@ public interface AdminMapper {
     // 获取最大班级号
     @Select("SELECT MAX(class_id) AS max_class_id FROM class WHERE semester = #{semester} AND course_id = #{courseId}")
     String getMaxClassId(String semester, String courseId);
+
+    // 获取课程
+    List<Course> showOriginCourseWithFilters(String courseId, String courseName, String credit, String creditHours, String deptName);
+
+    // 修改课程
+    @Update("update course set course_name=#{course.courseName}, credit=#{course.credit}, credit_hours=#{course.creditHours}, dept_id=#{course.deptId} where course_id=#{course.courseId}")
+    void updateCourse(String courseId, Course course);
+
+    // 删除课程
+    @Select("CALL DeleteCourseWithSelection(#{courseId})")
+    void deleteCourse(String courseId);
+
+    // 新增课程
+    @Insert("insert into course(course_id, course_name, credit, credit_hours, dept_id) values(#{courseId}, #{courseName}, #{credit}, #{creditHours}, #{deptId})")
+    void addCourse(Course course);
 }

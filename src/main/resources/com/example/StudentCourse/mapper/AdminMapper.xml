@@ -192,5 +192,33 @@
         WHERE cl.staff_id = #{staffId} AND cl.semester = #{semester}
     </select>
 
+    <select id="showOriginCourseWithFilters" resultType="com.example.StudentCourse.pojo.Course">
+        SELECT
+        c.course_id,
+        c.course_name,
+        c.credit,
+        c.credit_hours,
+        d.dept_name
+        FROM course c
+        JOIN department d ON c.dept_id = d.dept_id
+        <where>
+            <if test="courseId != null and courseId != ''">
+                AND c.course_id = #{courseId}
+            </if>
+            <if test="courseName != null and courseName != ''">
+                AND c.course_name LIKE CONCAT('%', #{courseName}, '%')
+            </if>
+            <if test="credit != null and credit != ''">
+                AND c.credit = #{credit}
+            </if>
+            <if test="creditHours != null and creditHours != ''">
+                AND c.credit_hours = #{creditHours}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                AND d.dept_name LIKE CONCAT('%', #{deptName}, '%')
+            </if>
+        </where>
+    </select>
+
 
 </mapper>

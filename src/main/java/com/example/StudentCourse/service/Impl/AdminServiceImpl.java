@@ -244,6 +244,9 @@ public class AdminServiceImpl implements AdminService {
         String GetClassId = adminMapper.getMaxClassId(semester, courseId);
 
         // 将字符串转换为整数并递增
+        if (GetClassId == null) {
+            GetClassId = "00";
+        }
         int nextClassId = Integer.parseInt(GetClassId) + 1;
 
         // 将整数转换回字符串并格式化为两位数
@@ -252,5 +255,40 @@ public class AdminServiceImpl implements AdminService {
         // 3、将所选择的课加入到选课表中
         adminMapper.addTeacherCourse(staffId, semester, courseId, classId, classTime, maxStudents);
         return 3; // 成功
+    }
+
+    @Override
+    public PageResult6 showOriginCourseList(int page, int size, String courseId, String courseName, String credit, String creditHours, String deptName) {
+        // 使用 PageHelper 插件进行分页
+        PageHelper.startPage(page, size);
+
+        // 调用 Mapper 查询方法，传入搜索条件
+        List<Course> courseList = adminMapper.showOriginCourseWithFilters(courseId, courseName, credit, creditHours, deptName);
+        Page<Course> p = (Page<Course>) courseList;
+
+        return new PageResult6(p.getTotal(), p.getResult());
+    }
+
+    @Override
+    public void updateCourse(String courseId, Course course) {
+        String deptName = course.getDeptName();
+        String deptId = adminMapper.selectDeptIdByName(deptName);
+        course.setDeptId(deptId);
+
+        adminMapper.updateCourse(courseId, course);
+    }
+
+    @Override
+    public void deleteCourse(String courseId) {
+        adminMapper.deleteCourse(courseId);
+    }
+
+    @Override
+    public void addCourse(Course course) {
+        String deptName = course.getDeptName();
+        String deptId = adminMapper.selectDeptIdByName(deptName);
+        course.setDeptId(deptId);
+
+        adminMapper.addCourse(course);
     }
 }

@@ -312,5 +312,46 @@ public class AdminController {
 
     }
 
+    // **************************
+    // **************************
+    // 课程信息管理的一些操作
+
+    // 显示所有课程信息，并支持搜索功能
+    @GetMapping("admin/courselist")
+    public Result showCourseList(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam(required = false) String courseId,
+            @RequestParam(required = false) String courseName,
+            @RequestParam(required = false) String credit,
+            @RequestParam(required = false) String creditHours,
+            @RequestParam(required = false) String deptName) {
+
+        PageResult6 pageResult = adminService.showOriginCourseList(page, size, courseId, courseName, credit, creditHours, deptName);
+
+        // 返回包含总条数和课程列表的结果
+        return Result.success(pageResult);
+    }
+
+    // 更新课程信息
+    @PutMapping("admin/course/{courseId}")
+    public Result updateCourse(@PathVariable String courseId, @RequestBody Course course){
+        adminService.updateCourse(courseId, course);
+        return Result.success();
+    }
+
+    // 删除课程信息
+    @DeleteMapping("admin/course/{courseId}")
+    public Result deleteCourse(@PathVariable String courseId) {
+        adminService.deleteCourse(courseId);
+        return Result.success();
+    }
+
+    // 新增课程信息
+    @PostMapping("admin/course")
+    public Result addCourse(@RequestBody Course course){
+        adminService.addCourse(course);
+        return Result.success();
+    }
 
 }
